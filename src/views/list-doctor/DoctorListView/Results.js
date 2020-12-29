@@ -1,14 +1,14 @@
 import React, { useState,useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+// import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {connect} from 'react-redux';
 import {fetchCollectionsStartAsync} from '../../../redux/doctor/doctor.actions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import {
-  Avatar,
+  // Avatar,
   Box,
   Card,
   Checkbox,
@@ -21,8 +21,8 @@ import {
   Typography,
   makeStyles
 } from '@material-ui/core';
-import getInitials from 'src/utils/getInitials';
-import axios from 'axios';
+// import getInitials from 'src/utils/getInitials';
+// import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -35,7 +35,7 @@ const Results = ({ className, customers,doctorData,getDoctorData,...rest }) => {
   const classes = useStyles();
    const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
    const [limit, setLimit] = useState(10);
-   const [doctorList,setDoctorList]=useState([]);
+  //  const [doctorList,setDoctorList]=useState([]);
 
    useEffect(()=>{
      console.log("use Effect called...");

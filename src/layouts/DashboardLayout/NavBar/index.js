@@ -47,9 +47,9 @@ const items = [
     title:'Chemist'
   },
   {
-    href: '/app/customers',
+    href: '/app/view/doctors',
     icon: UsersIcon,
-    title: 'Customers'
+    title: 'View Doctors'
   },
   // {
   //   href: '/app/products',

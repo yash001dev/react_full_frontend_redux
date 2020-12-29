@@ -4,7 +4,7 @@ const INITIAL_STATE={
     errorMessage:undefined,
 };
 
-const doctorReducer=(state=INITIAL_STATE,action)=>{
+const chemistReducer=(state=INITIAL_STATE,action)=>{
     switch(action.type){
         case 'FETCH_COLLECTIONS_START':
             return{

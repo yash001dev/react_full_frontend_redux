@@ -12,13 +12,14 @@ import RegisterView from 'src/views/auth/RegisterView';
 import SettingsView from 'src/views/settings/SettingsView';
 import DoctorView from 'src/views/doctor/DoctorView';
 import ChemistView from 'src/views/chemist/chemistView';
+import DoctorListView from 'src/views/list-doctor/DoctorListView';
 const routes = [
   {
     path: 'app',
     element: <DashboardLayout />,
     children: [
       // { path: 'account', element: <AccountView /> },
-      { path: 'customers', element: <CustomerListView /> },
+      { path: 'view/doctors', element: <DoctorListView /> },
       { path: 'dashboard', element: <DashboardView /> },
       // { path: 'products', element: <ProductListView /> },
       {path:'doctor',element:<DoctorView/>},

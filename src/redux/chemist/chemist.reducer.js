@@ -36,4 +36,4 @@ const chemistReducer=(state=INITIAL_STATE,action)=>{
     }
 };
 
-export default doctorReducer;
+export default chemistReducer;

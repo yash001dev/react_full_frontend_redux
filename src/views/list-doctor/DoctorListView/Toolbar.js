@@ -44,6 +44,7 @@ const Toolbar = ({ className, ...rest }) => {
         <Button
           color="primary"
           variant="contained"
+          href={'/app/doctor'}
         >
           Add Doctor
         </Button>

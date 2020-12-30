@@ -36,20 +36,26 @@ const items = [
     icon: BarChartIcon,
     title: 'Dashboard'
   },
-  {
-    href:'/app/doctor',
-    icon:UserIcon,
-    title:'Doctors'
-  },
+  
   {
     href:'/app/chemist',
     icon:ShoppingBagIcon,
     title:'Chemist'
   },
   {
+    href:'/app/mr',
+    icon:LockIcon,
+    title:'MR'
+  },
+  {
     href: '/app/view/doctors',
     icon: UsersIcon,
     title: 'View Doctors'
+  },
+  {
+    href:'/app/view/chemist',
+    icon:ShoppingBagIcon,
+    title:'View Chemist'
   },
   // {
   //   href: '/app/products',

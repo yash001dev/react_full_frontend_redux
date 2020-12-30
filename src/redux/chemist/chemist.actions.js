@@ -17,7 +17,7 @@ export const fetchCollectionFailure=errorMessage=>({
 export const fetchCollectionsStartAsync=()=>{
     return dispatch=>{
         dispatch(fetchCollectionsStart());
-        Axios.get('http://localhost:3001/api/doctor/get')
+        Axios.get('http://localhost:3001/api/chemist/get')
         .then((response)=>{
             const collectionMap=response.data;
             console.log("dataaaaa");

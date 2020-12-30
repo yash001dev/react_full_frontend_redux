@@ -13,6 +13,8 @@ import SettingsView from 'src/views/settings/SettingsView';
 import DoctorView from 'src/views/doctor/DoctorView';
 import ChemistView from 'src/views/chemist/chemistView';
 import DoctorListView from 'src/views/list-doctor/DoctorListView';
+import ChemistListView from 'src/views/list-chemist/ChemistListView';
+import MrView from './views/mr/MrView';
 const routes = [
   {
     path: 'app',
@@ -20,10 +22,12 @@ const routes = [
     children: [
       // { path: 'account', element: <AccountView /> },
       { path: 'view/doctors', element: <DoctorListView /> },
+      { path:'view/chemist',element:<ChemistListView/>},
       { path: 'dashboard', element: <DashboardView /> },
       // { path: 'products', element: <ProductListView /> },
       {path:'doctor',element:<DoctorView/>},
       {path:'chemist',element:<ChemistView/>},
+      {path:'mr',element:<MrView/>},
       // { path: 'settings', element: <SettingsView /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]

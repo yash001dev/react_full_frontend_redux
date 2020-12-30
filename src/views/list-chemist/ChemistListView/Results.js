@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {connect} from 'react-redux';
-import {fetchCollectionsStartAsync} from '../../../redux/chemist/chemist.actions';
+import {fetchCollectionsStartAsync,updateData} from '../../../redux/chemist/chemist.actions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import {
@@ -29,9 +29,9 @@ import {
   TextField,
   Button
 } from '@material-ui/core';
-import { AddShoppingCart } from '@material-ui/icons';
+import { AddShoppingCart, Delete, Update } from '@material-ui/icons';
 // import getInitials from 'src/utils/getInitials';
-// import axios from 'axios';
+import Axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -40,8 +40,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, customers,chemistData,getChemistData,...rest }) => {
-
+const Results = ({ className, customers,chemistData,updateData,getChemistData,...rest }) => {
+  
   //FormDialogs Declaration
   const [open,setOpen]=useState(false);
   const [id,setId]=useState('');
@@ -51,6 +51,18 @@ const Results = ({ className, customers,chemistData,getChemistData,...rest }) =>
   const [contactNumber,setContactNumber]=useState('');
   const [area,setArea]=useState('');
   const [city,setCity]=useState('');
+
+
+  //DeleteFormDialogs Declaration
+  const [deleteopen,setDeleteOpen]=useState(false);
+
+  const deleteHandleClickOpen=()=>{
+    setDeleteOpen(true);
+  };
+
+  const deleteHandleClickClose=()=>{
+    setDeleteOpen(false);
+  };
 
   const handleClickOpen=(data)=>{
     setId(data.id);
@@ -67,10 +79,26 @@ const Results = ({ className, customers,chemistData,getChemistData,...rest }) =>
     setOpen(false);
   };
 
-  const handleEdit=()=>{
-    console.log("data edited...");
-    getChemistData();
-  };
+const handleEdit=()=>{
+  console.log("Edit Button is Clicked");
+
+         Axios.put('http://localhost:3001/api/chemist/update',{
+            id:id,
+            name:name,
+            email:email,
+            number:contactNumber,
+            area:area,
+            city:city,
+            shop_name:shop_name
+          })
+          updateData({id:id,name:name,shop_name:shop_name,email:email,city:city,area:area,number:contactNumber});
+          setOpen(false);
+};
+
+const handleDelete=()=>{
+  console.log("Delete Button is Called...");
+  
+}
 
   //Normal Declaration
   const classes = useStyles();
@@ -85,8 +113,6 @@ const Results = ({ className, customers,chemistData,getChemistData,...rest }) =>
   
   return (
     <>
-
-    
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">Edit Chemist</DialogTitle>
       <DialogContent>
@@ -163,6 +189,40 @@ const Results = ({ className, customers,chemistData,getChemistData,...rest }) =>
           </Button>  
       </DialogActions>
     </Dialog>
+
+
+    //Delete Dialog
+    <Dialog
+        open={deleteopen}
+        onClose={deleteHandleClickClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Delete?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are You Sure You Want to Delete?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Delete
+          </Button>
+          <Button onClick={handleClose} color="primary" autoFocus>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+
+
+
+
+
+
+
+
+
     
     {chemistData?
     <Card
@@ -248,7 +308,10 @@ const Results = ({ className, customers,chemistData,getChemistData,...rest }) =>
                   </TableCell>
                   <TableCell>
                     <IconButton onClick={()=>handleClickOpen(data)}>
-                      <AddShoppingCart/>
+                     <Update/>
+                    </IconButton>
+                    <IconButton onClick={()=>handleClickOpen(data)}>
+                      <Delete/>
                     </IconButton>
                   </TableCell>
                 </TableRow>
@@ -267,6 +330,7 @@ Results.propTypes = {
 };
 
 const mapDispatchToProps=dispatch=>({
+  updateData:(item)=>dispatch(updateData(item)),
   getChemistData:()=>dispatch(fetchCollectionsStartAsync()),
 })
 

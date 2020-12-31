@@ -10,6 +10,10 @@ const updateCollection=(existingList,data)=>{
     });
 };
 
+const deleteCollection=(existingList,data)=>{
+    return existingList.filter((item)=>item.id!==data);
+}
+
 const chemistReducer=(state=INITIAL_STATE,action)=>{
     switch(action.type){
         case 'FETCH_COLLECTIONS_START':
@@ -39,6 +43,11 @@ const chemistReducer=(state=INITIAL_STATE,action)=>{
             return{
                 ...state,
                 collections:updateCollection(state.collections,action.payload)
+            }
+        case 'COLLECTION_DELETE':
+            return{
+                ...state,
+                collections:deleteCollection(state.collections,action.payload)
             }
         default:
             console.log("this is called...");

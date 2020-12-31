@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {connect} from 'react-redux';
-import {fetchCollectionsStartAsync,updateData} from '../../../redux/chemist/chemist.actions';
+import {fetchCollectionsStartAsync,updateData,deleteData} from '../../../redux/chemist/chemist.actions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import {
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, customers,chemistData,updateData,getChemistData,...rest }) => {
+const Results = ({ className, customers,chemistData,updateData,deleteData,getChemistData,...rest }) => {
   
   //FormDialogs Declaration
   const [open,setOpen]=useState(false);
@@ -51,13 +51,14 @@ const Results = ({ className, customers,chemistData,updateData,getChemistData,..
   const [contactNumber,setContactNumber]=useState('');
   const [area,setArea]=useState('');
   const [city,setCity]=useState('');
-
+  const [deleteId,setDeleteId]=useState('');
 
   //DeleteFormDialogs Declaration
   const [deleteopen,setDeleteOpen]=useState(false);
 
-  const deleteHandleClickOpen=()=>{
+  const deleteHandleClickOpen=(data)=>{
     setDeleteOpen(true);
+    setDeleteId(data);
   };
 
   const deleteHandleClickClose=()=>{
@@ -97,7 +98,10 @@ const handleEdit=()=>{
 
 const handleDelete=()=>{
   console.log("Delete Button is Called...");
-  
+  console.log("DELETED ID:",deleteId.id);
+  Axios.delete(`http://localhost:3001/api/chemist/delete/${deleteId.id}`);
+  deleteData(deleteId.id);
+  setDeleteOpen(false);
 }
 
   //Normal Declaration
@@ -181,17 +185,17 @@ const handleDelete=()=>{
           />
       </DialogContent>
       <DialogActions>
-      <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleEdit} color="primary">
+      <Button onClick={handleEdit} color="primary">
             Edit
-          </Button>  
+          </Button>
+      <Button onClick={handleClose} color="primary" autoFocus>
+            Close
+        </Button>
       </DialogActions>
     </Dialog>
 
 
-    //Delete Dialog
+    
     <Dialog
         open={deleteopen}
         onClose={deleteHandleClickClose}
@@ -205,12 +209,12 @@ const handleDelete=()=>{
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={deleteHandleClickClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="primary">
             Delete
-          </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
-            Close
-          </Button>
+          </Button>  
         </DialogActions>
       </Dialog>
 
@@ -310,7 +314,7 @@ const handleDelete=()=>{
                     <IconButton onClick={()=>handleClickOpen(data)}>
                      <Update/>
                     </IconButton>
-                    <IconButton onClick={()=>handleClickOpen(data)}>
+                    <IconButton onClick={()=>deleteHandleClickOpen(data)}>
                       <Delete/>
                     </IconButton>
                   </TableCell>
@@ -331,6 +335,7 @@ Results.propTypes = {
 
 const mapDispatchToProps=dispatch=>({
   updateData:(item)=>dispatch(updateData(item)),
+  deleteData:(item)=>dispatch(deleteData(item)),
   getChemistData:()=>dispatch(fetchCollectionsStartAsync()),
 })
 

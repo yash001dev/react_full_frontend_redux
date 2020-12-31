@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -9,9 +9,17 @@ import {
   TextField,
   InputAdornment,
   SvgIcon,
-  makeStyles
+  makeStyles,
+  DialogTitle,
+  DialogContentText,
+  DialogContent,
+  Dialog,
+  DialogActions,
 } from '@material-ui/core';
+import Axios from 'axios';
 import { Search as SearchIcon } from 'react-feather';
+import {connect} from 'react-redux';
+import {fetchCollectionsStartAsync} from '../../../redux/chemist/chemist.actions';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -23,10 +31,151 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Toolbar = ({ className, ...rest }) => {
+const Toolbar = ({ className,fetchCollectionsStart,...rest }) => {
+
+
+  const [fetch,setFetch]=useState(false);
+  //Form Input
+  const [open,setOpen]=useState(false);
+  const [name,setName]=useState('');
+  const [shop_name,setShopName]=useState('');
+  const [email,setEmail]=useState('');
+  const [contactNumber,setContactNumber]=useState('');
+  const [area,setArea]=useState('');
+  const [city,setCity]=useState('');
+ 
+  const handleClickOpen=()=>{
+    setOpen(true);
+  };
+
+  const handleClose=()=>{
+    setOpen(false);
+  };
+
+  useEffect(()=>{
+    async function fetching(){
+      console.log("CALLED............");
+      await fetchCollectionsStart();
+      setFetch(false);
+    }
+    fetching();
+  },[fetch])
+
+const handleSubmit=()=>{
+  console.log("Submit Button is Clicked");
+        
+         Axios.post('http://localhost:3001/api/chemist/insert',{
+            name:name,
+            email:email,
+            number:contactNumber,
+            area:area,
+            city:city,
+            shop_name:shop_name
+          });
+          
+          setName('');
+          setShopName('');
+          setEmail('');
+          setContactNumber('');
+          setArea('');
+          setCity('');
+          setOpen('');
+          setOpen('');
+          setOpen(false);
+          setFetch(true);
+};
+
+
+
+
+
+
   const classes = useStyles();
 
   return (
+
+    <>
+    
+    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <DialogTitle id="form-dialog-title">Add Chemist</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+        Add Chemist According Your Requirements
+        </DialogContentText>
+        <TextField
+            fullWidth
+            label="Name"
+            margin="normal"
+            name="name"
+            type="text"
+            variant="outlined"
+            value={name}
+            onChange={(e)=>setName(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            label="Shop Name"
+            margin="normal"
+            name="shop_name"
+            type="text"
+            variant="outlined"
+            value={shop_name}
+            onChange={(e)=>setShopName(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            label="Email"
+            margin="normal"
+            name="email"
+            type="email"
+            value={email}
+            variant="outlined"
+            onChange={(e)=>setEmail(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            label="number"
+            margin="normal"
+            name="number"
+            type="text"
+            value={contactNumber}
+            variant="outlined"
+            onChange={(e)=>setContactNumber(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            label="area"
+            margin="normal"
+            name="area"
+            type="text"
+            value={area}
+            variant="outlined"
+            onChange={(e)=>setArea(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            label="city"
+            margin="normal"
+            name="city"
+            type="text"
+            value={city}
+            variant="outlined"
+            onChange={(e)=>setCity(e.target.value)}
+          />
+      </DialogContent>
+      <DialogActions>
+      <Button onClick={handleSubmit} color="primary">
+            Submit
+      </Button>
+      <Button onClick={handleClose} color="primary" autoFocus>
+            Close
+        </Button>
+      </DialogActions>
+    </Dialog>
+
+
+
+
     <div
       className={clsx(classes.root, className)}
       {...rest}
@@ -36,7 +185,9 @@ const Toolbar = ({ className, ...rest }) => {
         justifyContent="flex-end"
       >
         {/* <Button className={classes.importButton}>
-          Import
+          Importimport { fetchCollectionsStart } from './../../../redux/doctor/doctor.actions';
+import { connect } from 'react-redux';
+
         </Button>
         <Button className={classes.exportButton}>
           Export
@@ -44,6 +195,7 @@ const Toolbar = ({ className, ...rest }) => {
         <Button
           color="primary"
           variant="contained"
+          onClick={()=>handleClickOpen()}
         >
           Add Chemist
         </Button>
@@ -74,6 +226,7 @@ const Toolbar = ({ className, ...rest }) => {
         </Card>
       </Box> */}
     </div>
+    </>
   );
 };
 
@@ -81,4 +234,8 @@ Toolbar.propTypes = {
   className: PropTypes.string
 };
 
-export default Toolbar;
+const mapDispatchToProps=dispatch=>({
+  fetchCollectionsStart:()=>(dispatch(fetchCollectionsStartAsync())),
+});
+
+export default connect(null,mapDispatchToProps)(Toolbar);

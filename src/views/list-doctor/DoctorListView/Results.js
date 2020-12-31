@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {connect} from 'react-redux';
-import {fetchCollectionsStartAsync} from '../../../redux/doctor/doctor.actions';
+import {fetchCollectionsStartAsync,updateData,deleteData} from '../../../redux/doctor/doctor.actions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import {
@@ -19,10 +19,19 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  makeStyles
+  makeStyles,
+  IconButton,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  DialogTitle,
+  DialogContentText,
+  TextField,
+  Button
 } from '@material-ui/core';
+import { AddShoppingCart, Delete, Update } from '@material-ui/icons';
 // import getInitials from 'src/utils/getInitials';
-// import axios from 'axios';
+import Axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -31,7 +40,69 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, customers,doctorData,getDoctorData,...rest }) => {
+const Results = ({ className, customers,chemistData,updateData,deleteData,getChemistData,...rest }) => {
+  
+  //FormDialogs Declaration
+  const [open,setOpen]=useState(false);
+  const [id,setId]=useState('');
+  const [name,setName]=useState('');
+  // const [shop_name,setShopName]=useState('');
+  const [email,setEmail]=useState('');
+  const [contactNumber,setContactNumber]=useState('');
+  const [area,setArea]=useState('');
+  const [city,setCity]=useState('');
+  const [deleteId,setDeleteId]=useState('');
+
+  //DeleteFormDialogs Declaration
+  const [deleteopen,setDeleteOpen]=useState(false);
+
+  const deleteHandleClickOpen=(data)=>{
+    setDeleteOpen(true);
+    setDeleteId(data);
+  };
+
+  const deleteHandleClickClose=()=>{
+    setDeleteOpen(false);
+  };
+
+  const handleClickOpen=(data)=>{
+    setId(data.id);
+    setName(data.name);
+    
+    setEmail(data.email);
+    setContactNumber(data.number);
+    setArea(data.area);
+    // setCity(data.city);
+    setOpen(true);
+  };
+
+  const handleClose=()=>{
+    setOpen(false);
+  };
+
+const handleEdit=()=>{
+  console.log("Edit Button is Clicked");
+
+         Axios.put('http://localhost:3001/api/doctor/update',{
+            id:id,
+            name:name,
+            email:email,
+            number:contactNumber,
+            area:area,
+          })
+          updateData({id:id,name:name,email:email,city:city,area:area,number:contactNumber});
+          setOpen(false);
+};
+
+const handleDelete=()=>{
+  console.log("Delete Button is Called...");
+  console.log("DELETED ID:",deleteId.id);
+  Axios.delete(`http://localhost:3001/api/doctor/delete/${deleteId.id}`);
+  deleteData(deleteId.id);
+  setDeleteOpen(false);
+}
+
+  //Normal Declaration
   const classes = useStyles();
    const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
    const [limit, setLimit] = useState(10);
@@ -39,52 +110,104 @@ const Results = ({ className, customers,doctorData,getDoctorData,...rest }) => {
 
    useEffect(()=>{
      console.log("use Effect called...");
-    getDoctorData();
+    getChemistData();
    },[])
-  // const [page, setPage] = useState(0);
-
-  // const handleSelectAll = (event) => {
-  //   let newSelectedCustomerIds;
-
-  //   if (event.target.checked) {
-  //     newSelectedCustomerIds = customers.map((customer) => customer.id);
-  //   } else {
-  //     newSelectedCustomerIds = [];
-  //   }
-
-  //   setSelectedCustomerIds(newSelectedCustomerIds);
-  // };
-
-  // const handleSelectOne = (event, id) => {
-  //   const selectedIndex = selectedCustomerIds.indexOf(id);
-  //   let newSelectedCustomerIds = [];
-
-  //   if (selectedIndex === -1) {
-  //     newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds, id);
-  //   } else if (selectedIndex === 0) {
-  //     newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds.slice(1));
-  //   } else if (selectedIndex === selectedCustomerIds.length - 1) {
-  //     newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds.slice(0, -1));
-  //   } else if (selectedIndex > 0) {
-  //     newSelectedCustomerIds = newSelectedCustomerIds.concat(
-  //       selectedCustomerIds.slice(0, selectedIndex),
-  //       selectedCustomerIds.slice(selectedIndex + 1)
-  //     );
-  //   }
-
-  //   setSelectedCustomerIds(newSelectedCustomerIds);
-  // };
-
-  // const handleLimitChange = (event) => {
-  //   setLimit(event.target.value);
-  // };
-
-  // const handlePageChange = (event, newPage) => {
-  //   setPage(newPage);
-  // };
-
+  
   return (
-    doctorData?
+    <>
+    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <DialogTitle id="form-dialog-title">Edit Chemist</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+        Edit Doctor According Your Requirements
+        </DialogContentText>
+        <TextField
+            fullWidth
+            label="Name"
+            margin="normal"
+            name="name"
+            type="text"
+            variant="outlined"
+            value={name}
+            onChange={(e)=>setName(e.target.value)}
+          />
+          
+          <TextField
+            fullWidth
+            label="Email"
+            margin="normal"
+            name="email"
+            type="email"
+            value={email}
+            variant="outlined"
+            onChange={(e)=>setEmail(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            label="number"
+            margin="normal"
+            name="number"
+            type="text"
+            value={contactNumber}
+            variant="outlined"
+            onChange={(e)=>setContactNumber(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            label="area"
+            margin="normal"
+            name="area"
+            type="text"
+            value={area}
+            variant="outlined"
+            onChange={(e)=>setArea(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            label="city"
+            margin="normal"
+            name="city"
+            type="text"
+            value={city}
+            variant="outlined"
+            onChange={(e)=>setCity(e.target.value)}
+          />
+      </DialogContent>
+      <DialogActions>
+      <Button onClick={handleEdit} color="primary">
+            Edit
+          </Button>
+      <Button onClick={handleClose} color="primary" autoFocus>
+            Close
+        </Button>
+      </DialogActions>
+    </Dialog>
+
+
+    
+    <Dialog
+        open={deleteopen}
+        onClose={deleteHandleClickClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Delete?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are You Sure You Want to Delete?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={deleteHandleClickClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="primary">
+            Delete
+          </Button>  
+        </DialogActions>
+      </Dialog>
+
+    {chemistData?
     <Card
       className={clsx(classes.root, className)}
       {...rest}
@@ -94,17 +217,6 @@ const Results = ({ className, customers,doctorData,getDoctorData,...rest }) => {
           <Table>
             <TableHead>
               <TableRow>
-                {/* <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedCustomerIds.length === customers.length}
-                    color="primary"
-                    indeterminate={
-                      selectedCustomerIds.length > 0
-                      && selectedCustomerIds.length < customers.length
-                    }
-                    onChange={handleSelectAll}
-                  />
-                </TableCell> */}
                 <TableCell>
                   Name
                 </TableCell>
@@ -120,10 +232,13 @@ const Results = ({ className, customers,doctorData,getDoctorData,...rest }) => {
                 <TableCell>
                   City
                 </TableCell>
+                <TableCell>
+                  Operation
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {doctorData.slice(0, limit).map((data,index) => (
+              {chemistData.slice(0, limit).map((data,index) => (
                 <TableRow
                   hover
                   key={index}
@@ -168,23 +283,22 @@ const Results = ({ className, customers,doctorData,getDoctorData,...rest }) => {
                   <TableCell>
                     {data.city}
                   </TableCell>
+                  <TableCell>
+                    <IconButton onClick={()=>handleClickOpen(data)}>
+                     <Update/>
+                    </IconButton>
+                    <IconButton onClick={()=>deleteHandleClickOpen(data)}>
+                      <Delete/>
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </Box>
       </PerfectScrollbar>
-      {/* <TablePagination
-        component="div"
-        count={customers.length}
-        onChangePage={handlePageChange}
-        onChangeRowsPerPage={handleLimitChange}
-        page={page}
-        rowsPerPage={limit}
-        rowsPerPageOptions={[5, 10, 25]}
-      /> */}
-    </Card>: <CircularProgress />
-  );
+    </Card>: <CircularProgress />}
+  </>);
 };
 
 Results.propTypes = {
@@ -193,11 +307,13 @@ Results.propTypes = {
 };
 
 const mapDispatchToProps=dispatch=>({
-  getDoctorData:()=>dispatch(fetchCollectionsStartAsync()),
+  updateData:(item)=>dispatch(updateData(item)),
+  deleteData:(item)=>dispatch(deleteData(item)),
+  getChemistData:()=>dispatch(fetchCollectionsStartAsync()),
 })
 
 const mapStateToProps=(state)=>({
-  doctorData:state.doctor.collections
+  chemistData:state.doctor.collections
 });
 export default connect(mapStateToProps,mapDispatchToProps)(Results);
-// export default Results;
+

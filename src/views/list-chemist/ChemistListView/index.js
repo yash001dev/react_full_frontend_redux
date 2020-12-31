@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import {
   Box,
   Container,
-  makeStyles
+  makeStyles,
+
 } from '@material-ui/core';
 import Page from 'src/components/Page';
 import Results from './Results';
@@ -20,9 +21,12 @@ const useStyles = makeStyles((theme) => ({
 
 const ChemistListView = () => {
   const classes = useStyles();
+
+
   
 
   return (
+
     <Page
       className={classes.root}
       title="Chemist"
@@ -34,6 +38,7 @@ const ChemistListView = () => {
         </Box>
       </Container>
     </Page>
+    
   );
 };
 

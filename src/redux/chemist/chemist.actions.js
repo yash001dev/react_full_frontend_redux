@@ -15,42 +15,49 @@ export const fetchCollectionFailure=errorMessage=>({
     payload:errorMessage
 });
 
-//Update Collection
-// export const fetchUpdateStart=()=>({
-//     type:'UPDATE_COLLECTIONS_START'
-// });
-
-// export const fetchUpdateSuccess=collectionMap=>({
-//     type:'UPDATE_COLLECTIONS_UPDATE',
-//     payload:collectionMap
-// });
-
-// export const fetchUpdateFailure=errorMessage=>({
-//     type:'FETCH_COLLECTIONS_FAILURE',
-//     payload:errorMessage
-// });
-
 export const updateData=item=>({
     type:'COLLECTION_UPDATE',
     payload:item
-})
+});
+
+export const deleteData=item=>({
+    type:'COLLECTION_DELETE',
+    payload:item
+});
 
 //Async Select
 export const fetchCollectionsStartAsync=()=>{
     return dispatch=>{
-        dispatch(fetchCollectionsStart());
-        Axios.get('http://localhost:3001/api/chemist/get')
-        .then((response)=>{
-            console.log("DATA:",response);
-            const collectionMap=response.data;
-            console.log("dataaaaa");
-            dispatch(fetchCollectionsSuccess(collectionMap));
-        }).catch(error=>dispatch(fetchCollectionFailure('Something wents wrong... please try again')));
+        // dispatch(fetchCollectionsStart());
+        // Axios.get('http://localhost:3001/api/chemist/get')
+        // .then((response)=>{
+        //     console.log("RESPONSEDATA:",response);
+        //     const collectionMap=response.data;
+        //     console.log("dataaaaa:",collectionMap);
+        //     dispatch(fetchCollectionsSuccess(collectionMap));
+        // }).catch(error=>dispatch(fetchCollectionFailure('Something wents wrong... please try again')));
+            dispatch(fetchCollectionsStart());
+            return fetch("http://localhost:3001/api/chemist/get")
+              .then(handleErrors)
+              .then(res => res.json())
+              .then(json => {
+                console.log("JSON:",json);
+                dispatch(fetchCollectionsSuccess(json));
+                return json;
+              })
+              .catch(error => dispatch(fetchCollectionFailure('Somethin wents wrong... please try again ')));
+        
     }
 }
 
+
+//Handle Error
+function handleErrors(response) {
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
+    return response;
+}
+
 //Async Update
-
-
-
 

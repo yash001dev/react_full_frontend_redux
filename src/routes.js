@@ -15,6 +15,7 @@ import ChemistView from 'src/views/chemist/chemistView';
 import DoctorListView from 'src/views/list-doctor/DoctorListView';
 import ChemistListView from 'src/views/list-chemist/ChemistListView';
 import MrView from './views/mr/MrView';
+import MrListView from './views/list-mr/MrListView/index'; 
 const routes = [
   {
     path: 'app',
@@ -23,6 +24,7 @@ const routes = [
       // { path: 'account', element: <AccountView /> },
       { path: 'view/doctors', element: <DoctorListView /> },
       { path:'view/chemist',element:<ChemistListView/>},
+      {path:'view/mr',element:<MrListView/>},
       { path: 'dashboard', element: <DashboardView /> },
       // { path: 'products', element: <ProductListView /> },
       {path:'doctor',element:<DoctorView/>},

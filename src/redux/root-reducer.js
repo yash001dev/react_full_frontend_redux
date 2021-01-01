@@ -6,10 +6,12 @@ import storage from 'redux-persist/lib/storage';
 
 import doctorReducer from './doctor/doctor.reducer';
 import chemistReducer from './chemist/chemist.reducer';
+import mrReducer from './mr/mr.reducer';
 
 export default combineReducers({
     doctor:doctorReducer,
     chemist:chemistReducer,
+    mr:mrReducer,
 });
 
 

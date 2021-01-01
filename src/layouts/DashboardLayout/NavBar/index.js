@@ -57,6 +57,11 @@ const items = [
     icon:ShoppingBagIcon,
     title:'View Chemist'
   },
+  {
+    href:'/app/view/mr',
+    icon:AlertCircleIcon,
+    title:'View Mr',
+  },
   // {
   //   href: '/app/products',
   //   icon: ShoppingBagIcon,

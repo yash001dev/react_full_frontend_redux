@@ -6,7 +6,7 @@ const INITIAL_STATE={
 
 const updateCollection=(existingList,data)=>{
     return existingList.map((item)=>{
-        return item.id==data.id?{...item,name:data.name,email:data.email,city:data.city,area:data.city,number:data.number}:item
+        return item.id==data.id?{...item,name:data.name,email:data.email,city:data.city,area:data.city,number:data.number,doctor_id:data.doctor_id,chemist_id:data.chemist_id}:item
     });
 };
 

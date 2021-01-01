@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -15,11 +15,15 @@ import {
   DialogContent,
   Dialog,
   DialogActions,
+  InputLabel,
+  MenuItem,
+  Select,
 } from '@material-ui/core';
-import Axios from 'axios';
+import axios from 'axios';
 import { Search as SearchIcon } from 'react-feather';
-import {connect} from 'react-redux';
-import {fetchCollectionsStartAsync} from '../../../redux/doctor/doctor.actions';
+import { connect } from 'react-redux';
+import { fetchCollectionsStartAsync } from '../../../redux/mr/mr.actions';
+import theme from 'src/theme';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -31,60 +35,90 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Toolbar = ({ className,fetchCollectionsStart,...rest }) => {
+const Toolbar = ({ className, fetchCollectionsStart, ...rest }) => {
 
 
-  const [fetch,setFetch]=useState(false);
+  const [fetch, setFetch] = useState(false);
   //Form Input
-  const [open,setOpen]=useState(false);
-  const [name,setName]=useState('');
-  
-  const [email,setEmail]=useState('');
-  const [contactNumber,setContactNumber]=useState('');
-  const [area,setArea]=useState('');
-  const [city,setCity]=useState('');
- 
-  const handleClickOpen=()=>{
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState('');
+
+  const [email, setEmail] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
+  const [area, setArea] = useState('');
+  const [city, setCity] = useState('');
+  const [selectDoctor, setSelectedDoctor] = useState('');
+  const [selectChemist, setSelectedChemist] = useState('');
+  const [fetchChemist, setFetchChemist] = useState('');
+  const [fetchDoctor, setFetchDoctor] = useState('');
+  // const [doctorId,setDoctorId]=useState();
+  // const [chemistId,setChemistId]=useState();
+
+  const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose=()=>{
+  const handleClose = () => {
     setOpen(false);
   };
 
-  useEffect(()=>{
-    async function fetching(){
+  useEffect(() => {
+    async function fetching() {
       console.log("CALLED............");
       await fetchCollectionsStart();
       setFetch(false);
     }
     fetching();
-  },[fetch])
+  }, [fetch])
 
-const handleSubmit=()=>{
-  console.log("Submit Button is Clicked");
-        
-         Axios.post('http://localhost:3001/api/doctor/insert',{
-            name:name,
-            email:email,
-            number:contactNumber,
-            area:area,
-            city:city,
-           
-          });
-          
-          setName('');
-         
-          setEmail('');
-          setContactNumber('');
-          setArea('');
-          setCity('');
-          setOpen('');
-          setOpen('');
-          setOpen(false);
-          fetchCollectionsStart();
-          setFetch(true);
-};
+  useEffect(() => {
+    DoctorData();
+    ChemistData();
+  }, [])
+
+  const DoctorData = async () => {
+    const response = await axios('http://localhost:3001/api/doctor/get');
+    if (response) {
+      setFetchDoctor(response.data);
+    }
+    return null;
+  }
+
+  const ChemistData = async () => {
+    const response = await axios('http://localhost:3001/api/chemist/get');
+    if (response) {
+      console.log("CHEMIST DATA:", response.data);
+      setFetchChemist(response.data);
+    }
+    return null;
+  }
+
+
+  const handleSubmit = () => {
+    console.log("Submit Button is Clicked");
+
+    axios.post('http://localhost:3001/api/mr/insert', {
+      name: name,
+      email: email,
+      number: contactNumber,
+      area: area,
+      city: city,
+      doctor_id:selectDoctor,
+      chemist_id:selectChemist,
+    });
+
+    setName('');
+
+    setEmail('');
+    setContactNumber('');
+    setArea('');
+    setCity('');
+    setSelectedChemist('');
+    setSelectedDoctor('');
+    setOpen(false);
+    fetchCollectionsStart();
+    setFetch(true);
+  };
 
 
 
@@ -96,14 +130,14 @@ const handleSubmit=()=>{
   return (
 
     <>
-    
-    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">Add Chemist</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-        Add Doctor According Your Requirements
+
+      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Add Chemist</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Add Mr According Your Requirements
         </DialogContentText>
-        <TextField
+          <TextField
             fullWidth
             label="Name"
             margin="normal"
@@ -111,9 +145,9 @@ const handleSubmit=()=>{
             type="text"
             variant="outlined"
             value={name}
-            onChange={(e)=>setName(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
           />
-          
+
           <TextField
             fullWidth
             label="Email"
@@ -122,7 +156,7 @@ const handleSubmit=()=>{
             type="email"
             value={email}
             variant="outlined"
-            onChange={(e)=>setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             fullWidth
@@ -132,7 +166,7 @@ const handleSubmit=()=>{
             type="text"
             value={contactNumber}
             variant="outlined"
-            onChange={(e)=>setContactNumber(e.target.value)}
+            onChange={(e) => setContactNumber(e.target.value)}
           />
           <TextField
             fullWidth
@@ -142,7 +176,7 @@ const handleSubmit=()=>{
             type="text"
             value={area}
             variant="outlined"
-            onChange={(e)=>setArea(e.target.value)}
+            onChange={(e) => setArea(e.target.value)}
           />
           <TextField
             fullWidth
@@ -152,72 +186,80 @@ const handleSubmit=()=>{
             type="text"
             value={city}
             variant="outlined"
-            onChange={(e)=>setCity(e.target.value)}
+            onChange={(e) => setCity(e.target.value)}
           />
-      </DialogContent>
-      <DialogActions>
-      <Button onClick={handleSubmit} color="primary">
+
+          <InputLabel style={{ marginTop: theme.spacing(2) }} id="select-label">Select Doctor</InputLabel>
+
+          <Select
+            id="select-label"
+            fullWidth
+            margin="normal"
+            name="select_doctor"
+            value={selectDoctor}
+            style={{ marginTop: theme.spacing(1) }}
+            variant="outlined"
+            onChange={(e) => setSelectedDoctor(e.target.value)}
+          >
+            {fetchDoctor ? fetchDoctor.map((item) => {
+              return <MenuItem id={item.id} value={item.id}>{item.name}</MenuItem>
+            }) : <MenuItem value="">
+                <em>None</em>
+              </MenuItem>}
+          </Select>
+
+          <InputLabel style={{ marginTop: theme.spacing(2) }} id="select-label">Select Chemist</InputLabel>
+          <Select
+            id="select-label"
+            fullWidth
+            margin="normal"
+            name="select_chemist"
+            value={selectChemist}
+            style={{ marginTop: theme.spacing(1) }}
+            variant="outlined"
+            onChange={(e) => setSelectedChemist(e.target.value)}
+          >
+            {fetchChemist ? fetchChemist.map((item) => {
+              return <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
+            }) : <MenuItem value="">
+                <em>None</em>
+              </MenuItem>}
+          </Select>
+
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleSubmit} color="primary">
             Submit
       </Button>
-      <Button onClick={handleClose} color="primary" autoFocus>
+          <Button onClick={handleClose} color="primary" autoFocus>
             Close
         </Button>
-      </DialogActions>
-    </Dialog>
+        </DialogActions>
+      </Dialog>
 
 
 
 
-    <div
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
-      <Box
-        display="flex"
-        justifyContent="flex-end"
+      <div
+        className={clsx(classes.root, className)}
+        {...rest}
       >
-        {/* <Button className={classes.importButton}>
-          Importimport { fetchCollectionsStart } from './../../../redux/doctor/doctor.actions';
-import { connect } from 'react-redux';
-
-        </Button>
-        <Button className={classes.exportButton}>
-          Export
-        </Button> */}
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={()=>handleClickOpen()}
+        <Box
+          display="flex"
+          justifyContent="flex-end"
         >
-          Add Doctor
+
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => handleClickOpen()}
+          >
+            Add Mr
         </Button>
-      </Box>
-      {/* <Box mt={3}>
-        <Card>
-          <CardContent>
-            <Box maxWidth={500}>
-              <TextField
-                fullWidth
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SvgIcon
-                        fontSize="small"
-                        color="action"
-                      >
-                        <SearchIcon />
-                      </SvgIcon>
-                    </InputAdornment>
-                  )
-                }}
-                placeholder="Search customer"
-                variant="outlined"
-              />
-            </Box>
-          </CardContent>
-        </Card>
-      </Box> */}
-    </div>
+        </Box>
+
+      </div>
     </>
   );
 };
@@ -226,8 +268,8 @@ Toolbar.propTypes = {
   className: PropTypes.string
 };
 
-const mapDispatchToProps=dispatch=>({
-  fetchCollectionsStart:()=>(dispatch(fetchCollectionsStartAsync())),
+const mapDispatchToProps = dispatch => ({
+  fetchCollectionsStart: () => (dispatch(fetchCollectionsStartAsync())),
 });
 
-export default connect(null,mapDispatchToProps)(Toolbar);
+export default connect(null, mapDispatchToProps)(Toolbar);

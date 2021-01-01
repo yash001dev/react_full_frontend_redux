@@ -27,11 +27,15 @@ import {
   DialogTitle,
   DialogContentText,
   TextField,
+  InputLabel,
+  Select,
+  MenuItem,
   Button
 } from '@material-ui/core';
 import { AddShoppingCart, Delete, Update } from '@material-ui/icons';
 // import getInitials from 'src/utils/getInitials';
-import Axios from 'axios';
+import axios from 'axios';
+import theme from 'src/theme';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -53,8 +57,17 @@ const Results = ({ className, customers,mrData,updateData,deleteData,getChemistD
   const [city,setCity]=useState('');
   const [deleteId,setDeleteId]=useState('');
 
+  const [doctor_id,setDoctorId]=useState();
+  const [chemist_id,setChemistId]=useState();
+
   //DeleteFormDialogs Declaration
   const [deleteopen,setDeleteOpen]=useState(false);
+
+
+  const [selectDoctor, setSelectedDoctor] = useState('');
+  const [selectChemist, setSelectedChemist] = useState('');
+  const [fetchChemist,setFetchChemist]=useState('');
+  const [fetchDoctor,setFetchDoctor]=useState('');
 
   const deleteHandleClickOpen=(data)=>{
     setDeleteOpen(true);
@@ -73,8 +86,28 @@ const Results = ({ className, customers,mrData,updateData,deleteData,getChemistD
     setContactNumber(data.number);
     setArea(data.area);
     // setCity(data.city);
+    setDoctorId(data.doctor_id);
+    setChemistId(data.chemist_id);
     setOpen(true);
   };
+
+  const DoctorData = async () => {
+    const response = await axios('http://localhost:3001/api/doctor/get');
+    if (response) {
+      setFetchDoctor(response.data);
+    }
+    return null;
+  }
+
+  const ChemistData = async () => {
+    const response = await axios('http://localhost:3001/api/chemist/get');
+    if (response) {
+      console.log("CHEMIST DATA:", response.data);
+      setFetchChemist(response.data);
+    }
+    return null;
+  }
+
 
   const handleClose=()=>{
     setOpen(false);
@@ -83,21 +116,23 @@ const Results = ({ className, customers,mrData,updateData,deleteData,getChemistD
 const handleEdit=()=>{
   console.log("Edit Button is Clicked");
 
-         Axios.put('http://localhost:3001/api/doctor/update',{
+         axios.put('http://localhost:3001/api/mr/update',{
             id:id,
             name:name,
             email:email,
             number:contactNumber,
             area:area,
+            doctor_id:selectDoctor,
+            chemist_id:selectChemist,
           })
-          updateData({id:id,name:name,email:email,city:city,area:area,number:contactNumber});
+          updateData({id:id,name:name,email:email,city:city,area:area,number:contactNumber,doctor_id:selectDoctor,chemist_id:selectChemist});
           setOpen(false);
 };
 
 const handleDelete=()=>{
   console.log("Delete Button is Called...");
   console.log("DELETED ID:",deleteId.id);
-  Axios.delete(`http://localhost:3001/api/doctor/delete/${deleteId.id}`);
+  axios.delete(`http://localhost:3001/api/mr/delete/${deleteId.id}`);
   deleteData(deleteId.id);
   setDeleteOpen(false);
 }
@@ -112,6 +147,11 @@ const handleDelete=()=>{
      console.log("use Effect called...");
     getChemistData();
    },[])
+
+   useEffect(()=>{
+    DoctorData();
+    ChemistData();
+   },[])
   
   return (
     <>
@@ -119,7 +159,7 @@ const handleDelete=()=>{
       <DialogTitle id="form-dialog-title">Edit Chemist</DialogTitle>
       <DialogContent>
         <DialogContentText>
-        Edit Doctor According Your Requirements
+        Edit Mr According Your Requirements
         </DialogContentText>
         <TextField
             fullWidth
@@ -172,6 +212,46 @@ const handleDelete=()=>{
             variant="outlined"
             onChange={(e)=>setCity(e.target.value)}
           />
+
+          <InputLabel style={{ marginTop: theme.spacing(2) }} id="select-label">Select Doctor</InputLabel>
+          <Select
+            id="select-label"
+            fullWidth
+            margin="normal"
+            name="select_doctor"
+            value={selectDoctor}
+            style={{ marginTop: theme.spacing(1) }}
+            variant="outlined"
+            onChange={(e) => setSelectedDoctor(e.target.value)}
+          >
+            {fetchDoctor ? fetchDoctor.map((item) => {
+              return <MenuItem id={item.id} value={item.id}>{item.name}</MenuItem>
+            }) : <MenuItem value="">
+                <em>None</em>
+              </MenuItem>}
+          </Select>
+
+          <InputLabel style={{ marginTop: theme.spacing(2) }} id="select-label">Select Chemist</InputLabel>
+          <Select
+            id="select-label"
+            fullWidth
+            margin="normal"
+            name="select_chemist"
+            value={selectChemist}
+            style={{ marginTop: theme.spacing(1) }}
+            variant="outlined"
+            onChange={(e) => setSelectedChemist(e.target.value)}
+          >
+            {fetchChemist? fetchChemist.map((item) => {
+              return <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
+            }) : <MenuItem value="">
+                <em>None</em>
+              </MenuItem>}
+          </Select>
+
+
+          
+
       </DialogContent>
       <DialogActions>
       <Button onClick={handleEdit} color="primary">

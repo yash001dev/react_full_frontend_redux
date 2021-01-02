@@ -36,32 +36,27 @@ const items = [
     icon: BarChartIcon,
     title: 'Dashboard'
   },
-  
   {
-    href:'/app/chemist',
+    href:'/app/view/chemist',
     icon:ShoppingBagIcon,
     title:'Chemist'
   },
   {
-    href:'/app/mr',
-    icon:LockIcon,
-    title:'MR'
-  },
-  {
     href: '/app/view/doctors',
     icon: UsersIcon,
-    title: 'View Doctors'
+    title: 'Doctors'
   },
-  {
-    href:'/app/view/chemist',
-    icon:ShoppingBagIcon,
-    title:'View Chemist'
-  },
+  
   {
     href:'/app/view/mr',
     icon:AlertCircleIcon,
-    title:'View Mr',
+    title:'Mr',
   },
+  {
+    href:'/app/view/senior',
+    icon:UserPlusIcon,
+    title:'Senior'
+  }
   // {
   //   href: '/app/products',
   //   icon: ShoppingBagIcon,

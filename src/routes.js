@@ -16,6 +16,7 @@ import DoctorListView from 'src/views/list-doctor/DoctorListView';
 import ChemistListView from 'src/views/list-chemist/ChemistListView';
 import MrView from './views/mr/MrView';
 import MrListView from './views/list-mr/MrListView/index'; 
+import SeniorListView from './views/list-senior/SeniorListView/index';
 const routes = [
   {
     path: 'app',
@@ -25,6 +26,7 @@ const routes = [
       { path: 'view/doctors', element: <DoctorListView /> },
       { path:'view/chemist',element:<ChemistListView/>},
       {path:'view/mr',element:<MrListView/>},
+      {path:'view/senior',element:<SeniorListView/>},
       { path: 'dashboard', element: <DashboardView /> },
       // { path: 'products', element: <ProductListView /> },
       {path:'doctor',element:<DoctorView/>},

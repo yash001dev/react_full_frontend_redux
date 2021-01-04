@@ -16,10 +16,13 @@ import {
   Dialog,
   DialogActions,
   InputLabel,
+  Checkbox,
+  ListItemText,
   MenuItem,
   Select,
 } from '@material-ui/core';
 import axios from 'axios';
+import Input from '@material-ui/core/Input';
 import { Search as SearchIcon } from 'react-feather';
 import { connect } from 'react-redux';
 import { fetchCollectionsStartAsync } from '../../../redux/senior/senior.actions';
@@ -47,7 +50,7 @@ const Toolbar = ({ className, fetchCollectionsStart, ...rest }) => {
   const [contactNumber, setContactNumber] = useState('');
   const [area, setArea] = useState('');
   const [city, setCity] = useState('');
-  const [selectMr, setSelectedMr] = useState('');
+  const [selectMr, setSelectedMr] = useState([]);
   // const [selectChemist, setSelectedChemist] = useState('');
   const [fetchMr, setFetchMr] = useState('');
   // const [fetchDoctor, setFetchDoctor] = useState('');
@@ -60,6 +63,18 @@ const Toolbar = ({ className, fetchCollectionsStart, ...rest }) => {
   const handleClose = () => {
     setOpen(false);
   };
+
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
   useEffect(() => {
     async function fetching() {
@@ -112,7 +127,7 @@ const Toolbar = ({ className, fetchCollectionsStart, ...rest }) => {
     setContactNumber('');
     setArea('');
     setCity('');
-    setSelectedMr('');
+    setSelectedMr([]);
     setOpen(false);
     fetchCollectionsStart();
     setFetch(true);
@@ -188,15 +203,22 @@ const Toolbar = ({ className, fetchCollectionsStart, ...rest }) => {
           <Select
             id="select-label"
             fullWidth
+            multiple
             margin="normal"
             name="select_doctor"
             value={selectMr}
             style={{ marginTop: theme.spacing(1) }}
+            input={<Input/>}
+            renderValue={(selected)=>selected.join(', ')}
+            MenuProps={MenuProps}
             variant="outlined"
             onChange={(e) => setSelectedMr(e.target.value)}
           >
             {fetchMr ? fetchMr.map((item) => {
-              return <MenuItem id={item.id} value={item.id}>{item.name}</MenuItem>
+              return <MenuItem key={item.id} id={item.id} value={item.id}>
+                <Checkbox checked={selectMr.indexOf(item.id) > -1} />
+                <ListItemText primary={item.name} />
+                </MenuItem>
             }) : <MenuItem value="">
                 <em>None</em>
               </MenuItem>}

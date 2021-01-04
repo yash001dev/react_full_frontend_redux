@@ -72,7 +72,7 @@ const Results = ({ className, customers,chemistData,updateData,deleteData,getChe
     setEmail(data.email);
     setContactNumber(data.number);
     setArea(data.area);
-    // setCity(data.city);
+    setCity(data.city);
     setOpen(true);
   };
 

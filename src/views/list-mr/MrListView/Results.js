@@ -30,7 +30,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Button
+  Button,
+  ListItemText
 } from '@material-ui/core';
 import { AddShoppingCart, Delete, Update } from '@material-ui/icons';
 // import getInitials from 'src/utils/getInitials';
@@ -45,6 +46,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Results = ({ className, customers,mrData,updateData,deleteData,getChemistData,...rest }) => {
+  
   
   //FormDialogs Declaration
   const [open,setOpen]=useState(false);
@@ -64,10 +66,13 @@ const Results = ({ className, customers,mrData,updateData,deleteData,getChemistD
   const [deleteopen,setDeleteOpen]=useState(false);
 
 
-  const [selectDoctor, setSelectedDoctor] = useState('');
-  const [selectChemist, setSelectedChemist] = useState('');
+  const [selectDoctor, setSelectedDoctor] = useState([]);
+  const [selectChemist, setSelectedChemist] = useState([]);
   const [fetchChemist,setFetchChemist]=useState('');
   const [fetchDoctor,setFetchDoctor]=useState('');
+
+  const [GetSelectedDoctor,setGetSelectedDoctor]=useState();
+  const [GetSelectedChemist,setGetSelectedChemist]=useState();
 
   const deleteHandleClickOpen=(data)=>{
     setDeleteOpen(true);
@@ -85,7 +90,7 @@ const Results = ({ className, customers,mrData,updateData,deleteData,getChemistD
     setEmail(data.email);
     setContactNumber(data.number);
     setArea(data.area);
-    // setCity(data.city);
+    setCity(data.city);
     setDoctorId(data.doctor_id);
     setChemistId(data.chemist_id);
     setOpen(true);
@@ -108,6 +113,46 @@ const Results = ({ className, customers,mrData,updateData,deleteData,getChemistD
     return null;
   }
 
+
+  const MrToDoctor=async()=>{
+    console.log("ID:",id);
+    const response=await axios(`http://localhost:3001/api/mrToDoctor/get/${id}`);
+    if(response){
+      setGetSelectedDoctor([]);
+      console.log("MRID:",response);
+      const data=await response.data
+      console.log("DATA:",data);
+      data.map((item)=>{
+        let usingSplit = item.doctor_id.split(',').map(Number);
+        console.log("USING SPLIT:",usingSplit);
+        usingSplit.map((item)=>setSelectedDoctor(selectDoctor=>selectDoctor.concat(item)));
+        // return setSelectedMr([...selectMr,usingSplit])
+      });
+
+    }
+    return null;
+  }
+
+  const MrToChemist=async()=>{
+    console.log("ID:",id);
+    const response=await axios(`http://localhost:3001/api/mrToChemist/get/${id}`);
+    if(response){
+      setGetSelectedChemist([]);
+      console.log("MRID:",response);
+      const data=await response.data
+      console.log("DATA:",data);
+      data.map((item)=>{
+        let usingSplit = item.chemist_id.split(',').map(Number);
+        console.log("USING SPLIT:",usingSplit);
+        usingSplit.map((item)=>setSelectedChemist(selectChemist=>selectChemist.concat(item)));
+        // return setSelectedMr([...selectMr,usingSplit])
+      });
+
+    }
+    return null;
+  }
+
+  
 
   const handleClose=()=>{
     setOpen(false);
@@ -152,6 +197,14 @@ const handleDelete=()=>{
     DoctorData();
     ChemistData();
    },[])
+
+   useEffect(()=>{
+    if(id){
+      console.log("SENIOR TO MR CALLED:",id);
+      MrToChemist();
+      MrToDoctor();
+    }
+   },[id])
   
   return (
     <>
@@ -222,13 +275,16 @@ const handleDelete=()=>{
             value={selectDoctor}
             style={{ marginTop: theme.spacing(1) }}
             variant="outlined"
-            onChange={(e) => setSelectedDoctor(e.target.value)}
+            onChange={(e) => setGetSelectedDoctor(e.target.value)}
           >
             {fetchDoctor ? fetchDoctor.map((item) => {
-              return <MenuItem id={item.id} value={item.id}>{item.name}</MenuItem>
-            }) : <MenuItem value="">
-                <em>None</em>
-              </MenuItem>}
+              return <MenuItem key={item.id} id={item.id} value={item.id}>
+              <Checkbox checked={selectDoctor.indexOf(item.id) > -1} />
+              <ListItemText primary={item.name} />
+              </MenuItem>
+          }) : <MenuItem value="">
+              <em>None</em>
+            </MenuItem>}
           </Select>
 
           <InputLabel style={{ marginTop: theme.spacing(2) }} id="select-label">Select Chemist</InputLabel>
@@ -240,13 +296,16 @@ const handleDelete=()=>{
             value={selectChemist}
             style={{ marginTop: theme.spacing(1) }}
             variant="outlined"
-            onChange={(e) => setSelectedChemist(e.target.value)}
+            onChange={(e) => setGetSelectedChemist(e.target.value)}
           >
             {fetchChemist? fetchChemist.map((item) => {
-              return <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
-            }) : <MenuItem value="">
-                <em>None</em>
-              </MenuItem>}
+              return <MenuItem key={item.id} id={item.id} value={item.id}>
+              <Checkbox checked={selectChemist.indexOf(item.id) > -1} />
+              <ListItemText primary={item.name} />
+              </MenuItem>
+          }) : <MenuItem value="">
+              <em>None</em>
+            </MenuItem>}
           </Select>
 
 

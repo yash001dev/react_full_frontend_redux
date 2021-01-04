@@ -30,9 +30,11 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Button
+  Button,
+  ListItemText
 } from '@material-ui/core';
 import { AddShoppingCart, Delete, Update } from '@material-ui/icons';
+import Input from '@material-ui/core/Input';
 // import getInitials from 'src/utils/getInitials';
 import axios from 'axios';
 import theme from 'src/theme';
@@ -43,6 +45,18 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2)
   }
 }));
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+PaperProps: {
+  style: {
+    maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+    width: 250,
+  },
+},
+};
+
 
 const Results = ({ className, customers,seniorData,updateData,deleteData,getChemistData,...rest }) => {
   
@@ -64,9 +78,10 @@ const Results = ({ className, customers,seniorData,updateData,deleteData,getChem
   const [deleteopen,setDeleteOpen]=useState(false);
 
 
-  const [selectMr, setSelectedMr] = useState('');
+  const [selectMr, setSelectedMr] = useState([]);
   // const [selectChemist, setSelectedChemist] = useState('');
   const [fetchMr,setFetchMr]=useState('');
+  const [fetchSeniorMr,setFetchSeniorMr]=useState('');
   // const [fetchDoctor,setFetchDoctor]=useState('');
 
   //For Deletion Operation
@@ -89,14 +104,33 @@ const Results = ({ className, customers,seniorData,updateData,deleteData,getChem
     setContactNumber(data.number);
     setArea(data.area);
     setMrId(data.mr_id);
-    
+    setCity(data.city);
     setOpen(true);
   };
 
   const MrData = async () => {
-    const response = await axios('http://localhost:3001/api/senior/get');
+    const response = await axios('http://localhost:3001/api/mr/get');
     if (response) {
       setFetchMr(response.data);
+    }
+    return null;
+  }
+
+  const SeniorToMr=async()=>{
+    console.log("ID:",id);
+    const response=await axios(`http://localhost:3001/api/seniorToMr/get/${id}`);
+    if(response){
+      setSelectedMr([]);
+      console.log("MRID:",response);
+      const data=await response.data
+      console.log("DATA:",data);
+      data.map((item)=>{
+        let usingSplit = item.mr_id.split(',').map(Number);
+        console.log("USING SPLIT:",usingSplit);
+        usingSplit.map((item)=>setSelectedMr(selectMr=>selectMr.concat(item)));
+        // return setSelectedMr([...selectMr,usingSplit])
+      });
+
     }
     return null;
   }
@@ -108,12 +142,13 @@ const Results = ({ className, customers,seniorData,updateData,deleteData,getChem
 const handleEdit=()=>{
   console.log("Edit Button is Clicked");
 
-         axios.put('http://localhost:3001/api/senior/update',{
+         axios.put('http://localhost:3001/api/seniorToMr/update',{
             id:id,
             name:name,
             email:email,
             number:contactNumber,
             area:area,
+            city:city,
             mr_id:selectMr,
             
           })
@@ -124,7 +159,7 @@ const handleEdit=()=>{
 const handleDelete=()=>{
   console.log("Delete Button is Called...");
   console.log("DELETED ID:",deleteId.id);
-  axios.delete(`http://localhost:3001/api/senior/delete/${deleteId.id}`);
+  axios.delete(`http://localhost:3001/api/seniorToMr/delete/${deleteId.id}`);
   deleteData(deleteId.id);
   setDeleteOpen(false);
 }
@@ -132,7 +167,7 @@ const handleDelete=()=>{
   //Normal Declaration
   const classes = useStyles();
    const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
-   const [limit, setLimit] = useState(10);
+   const [limit, setLimit] = useState(20);
   //  const [doctorList,setDoctorList]=useState([]);
 
    useEffect(()=>{
@@ -143,9 +178,17 @@ const handleDelete=()=>{
    useEffect(()=>{
     MrData();
    },[])
+
+   useEffect(()=>{
+    if(id){
+      console.log("SENIOR TO MR CALLED:",id);
+      SeniorToMr();
+    }
+   },[id])
   
   return (
     <>
+    {console.log("FETCH MR:",selectMr)}
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">Edit Senior</DialogTitle>
       <DialogContent>
@@ -208,19 +251,27 @@ const handleDelete=()=>{
           <Select
             id="select-label"
             fullWidth
+            multiple
             margin="normal"
             name="select_doctor"
             value={selectMr}
             style={{ marginTop: theme.spacing(1) }}
+            input={<Input/>}
+            renderValue={(selected)=>selected.join(', ')}
+            MenuProps={MenuProps}
             variant="outlined"
             onChange={(e) => setSelectedMr(e.target.value)}
           >
             {fetchMr ? fetchMr.map((item) => {
-              return <MenuItem id={item.id} value={item.id}>{item.name}</MenuItem>
+              return <MenuItem key={item.id} id={item.id} value={item.id}>
+                <Checkbox checked={selectMr.indexOf(item.id) > -1} />
+                <ListItemText primary={item.name} />
+                </MenuItem>
             }) : <MenuItem value="">
                 <em>None</em>
               </MenuItem>}
           </Select>
+
 
       </DialogContent>
       <DialogActions>

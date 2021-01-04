@@ -22,7 +22,7 @@ const routes = [
     path: 'app',
     element: <DashboardLayout />,
     children: [
-      // { path: 'account', element: <AccountView /> },
+       { path: 'account', element: <AccountView /> },
       { path: 'view/doctors', element: <DoctorListView /> },
       { path:'view/chemist',element:<ChemistListView/>},
       {path:'view/mr',element:<MrListView/>},

@@ -16,6 +16,8 @@ import {
   Dialog,
   DialogActions,
   InputLabel,
+  Checkbox,
+  ListItemText,
   MenuItem,
   Select,
 } from '@material-ui/core';
@@ -24,6 +26,8 @@ import { Search as SearchIcon } from 'react-feather';
 import { connect } from 'react-redux';
 import { fetchCollectionsStartAsync } from '../../../redux/mr/mr.actions';
 import theme from 'src/theme';
+import Input from '@material-ui/core/Input';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -47,8 +51,8 @@ const Toolbar = ({ className, fetchCollectionsStart, ...rest }) => {
   const [contactNumber, setContactNumber] = useState('');
   const [area, setArea] = useState('');
   const [city, setCity] = useState('');
-  const [selectDoctor, setSelectedDoctor] = useState('');
-  const [selectChemist, setSelectedChemist] = useState('');
+  const [selectDoctor, setSelectedDoctor] = useState([]);
+  const [selectChemist, setSelectedChemist] = useState([]);
   const [fetchChemist, setFetchChemist] = useState('');
   const [fetchDoctor, setFetchDoctor] = useState('');
   // const [doctorId,setDoctorId]=useState();
@@ -61,6 +65,18 @@ const Toolbar = ({ className, fetchCollectionsStart, ...rest }) => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const ITEM_HEIGHT = 48;
+  const ITEM_PADDING_TOP = 8;
+  const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
 
   useEffect(() => {
     async function fetching() {
@@ -113,8 +129,8 @@ const Toolbar = ({ className, fetchCollectionsStart, ...rest }) => {
     setContactNumber('');
     setArea('');
     setCity('');
-    setSelectedChemist('');
-    setSelectedDoctor('');
+    setSelectedChemist([]);
+    setSelectedDoctor([]);
     setOpen(false);
     fetchCollectionsStart();
     setFetch(true);
@@ -194,36 +210,50 @@ const Toolbar = ({ className, fetchCollectionsStart, ...rest }) => {
           <Select
             id="select-label"
             fullWidth
+            multiple
             margin="normal"
             name="select_doctor"
+            input={<Input/>}
             value={selectDoctor}
             style={{ marginTop: theme.spacing(1) }}
+            renderValue={(selected)=>selected.join(', ')}
+            MenuProps={MenuProps}
             variant="outlined"
             onChange={(e) => setSelectedDoctor(e.target.value)}
           >
             {fetchDoctor ? fetchDoctor.map((item) => {
-              return <MenuItem id={item.id} value={item.id}>{item.name}</MenuItem>
-            }) : <MenuItem value="">
-                <em>None</em>
-              </MenuItem>}
+              return <MenuItem key={item.id} id={item.id} value={item.id}>
+              <Checkbox checked={selectDoctor.indexOf(item.id) > -1} />
+              <ListItemText primary={item.name} />
+              </MenuItem>
+          }) : <MenuItem value="">
+              <em>None</em>
+            </MenuItem>}
           </Select>
 
           <InputLabel style={{ marginTop: theme.spacing(2) }} id="select-label">Select Chemist</InputLabel>
           <Select
             id="select-label"
             fullWidth
+            multiple
             margin="normal"
             name="select_chemist"
             value={selectChemist}
             style={{ marginTop: theme.spacing(1) }}
+            input={<Input/>}
+            renderValue={(selected)=>selected.join(', ')}
+            MenuProps={MenuProps}
             variant="outlined"
             onChange={(e) => setSelectedChemist(e.target.value)}
           >
             {fetchChemist ? fetchChemist.map((item) => {
-              return <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
-            }) : <MenuItem value="">
-                <em>None</em>
-              </MenuItem>}
+              return <MenuItem key={item.id} id={item.id} value={item.id}>
+              <Checkbox checked={selectChemist.indexOf(item.id) > -1} />
+              <ListItemText primary={item.name} />
+              </MenuItem>
+          }) : <MenuItem value="">
+              <em>None</em>
+            </MenuItem>}
           </Select>
 
 

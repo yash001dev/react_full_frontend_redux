@@ -6,7 +6,7 @@ const INITIAL_STATE={
 
 const updateCollection=(existingList,data)=>{
     return existingList.map((item)=>{
-        return item.id==data.id?{...item,name:data.name,email:data.email,city:data.city,area:data.city,number:data.number}:item
+        return item.id==data.id?{...item,name:data.name,email:data.email,city:data.city,area:data.area,number:data.number}:item
     });
 };
 
@@ -16,35 +16,35 @@ const deleteCollection=(existingList,data)=>{
 
 const doctorReducer=(state=INITIAL_STATE,action)=>{
     switch(action.type){
-        case 'FETCH_COLLECTIONS_START':
+        case 'DOCTOR_FETCH_COLLECTIONS_START':
             return{
                 ...state,
                 isFetching:true
             }
         
-        case 'FETCH_COLLECTIONS_SUCCESS':
+        case 'DOCTOR_FETCH_COLLECTIONS_SUCCESS':
             return{
                 ...state,
                 isFetching:false,
                 collections:action.payload
             }
-        case 'FETCH_COLLECTIONS_FAILURE':
+        case 'DOCTOR_FETCH_COLLECTIONS_FAILURE':
             return{
                 ...state,
                 isFetching:false,
                 errorMessage:action.payload
             }
-        case 'UPDATE_COLLECTIONS':
+        case 'DOCTOR_UPDATE_COLLECTIONS':
             return{
                 ...state,
                 collections:action.payload
             }
-        case 'COLLECTION_UPDATE':
+        case 'DOCTOR_COLLECTION_UPDATE':
             return{
                 ...state,
                 collections:updateCollection(state.collections,action.payload)
             }
-        case 'COLLECTION_DELETE':
+        case 'DOCTOR_COLLECTION_DELETE':
             return{
                 ...state,
                 collections:deleteCollection(state.collections,action.payload)

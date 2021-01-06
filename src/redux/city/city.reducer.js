@@ -6,50 +6,51 @@ const INITIAL_STATE={
 
 const updateCollection=(existingList,data)=>{
     return existingList.map((item)=>{
-        return item.id==data.id?{...item,name:data.name,email:data.email,city:data.city,area:data.city,number:data.number,shop_name:data.shop_name}:item
+        return item.city_id==data.id?{...item,city_name:data.city}:item
     });
 };
 
 const deleteCollection=(existingList,data)=>{
-    return existingList.filter((item)=>item.id!==data);
+    console.log("DATA DELETE:",existingList);
+    return existingList.filter((item)=>item.city_id!==data);
 }
 
-const chemistReducer=(state=INITIAL_STATE,action)=>{
+const cityReducer=(state=INITIAL_STATE,action)=>{
     switch(action.type){
-        case 'CHEMIST_FETCH_COLLECTIONS_START':
+        case 'CITY_FETCH_COLLECTIONS_START':
             return{
                 ...state,
                 isFetching:true
             }
         
-        case 'CHEMIST_FETCH_COLLECTIONS_SUCCESS':
+        case 'CITY_FETCH_COLLECTIONS_SUCCESS':
             return{
                 ...state,
                 isFetching:false,
                 collections:action.payload
             }
-        case 'CHEMIST_FETCH_COLLECTIONS_FAILURE':
+        case 'CITY_FETCH_COLLECTIONS_FAILURE':
             return{
                 ...state,
                 isFetching:false,
                 errorMessage:action.payload
             }
-        case 'CHEMIST_UPDATE_COLLECTIONS':
+        case 'CITY_UPDATE_COLLECTIONS':
             return{
                 ...state,
                 collections:action.payload
             }
-        case 'CHEMIST_COLLECTION_UPDATE':
+        case 'CITY_COLLECTION_UPDATE':
             return{
                 ...state,
                 collections:updateCollection(state.collections,action.payload)
             }
-        case 'CHEMIST_COLLECTION_DELETE':
+        case 'CITY_COLLECTION_DELETE':
             return{
                 ...state,
                 collections:deleteCollection(state.collections,action.payload)
             }
-        case 'CHEMIST_UPDATE_COLLECTIONS_START':
+        case 'CITY_UPDATE_COLLECTIONS_START':
             return{
                 ...state,
                 isFetching:false,
@@ -61,4 +62,4 @@ const chemistReducer=(state=INITIAL_STATE,action)=>{
     }
 };
 
-export default chemistReducer;
+export default cityReducer;

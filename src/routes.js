@@ -17,6 +17,10 @@ import ChemistListView from 'src/views/list-chemist/ChemistListView';
 import MrView from './views/mr/MrView';
 import MrListView from './views/list-mr/MrListView/index'; 
 import SeniorListView from './views/list-senior/SeniorListView/index';
+import CityListView from './views/list-city/CityListView/index';
+import WorkPlaceListView from './views/list-workplace/WorkPlaceListView/index';
+import WorkTypeListView from './views/list-worktype/WorkTypeListView/index';
+import HolidayListView from './views/list-holiday/HolidayListView/index';
 const routes = [
   {
     path: 'app',
@@ -27,6 +31,10 @@ const routes = [
       { path:'view/chemist',element:<ChemistListView/>},
       {path:'view/mr',element:<MrListView/>},
       {path:'view/senior',element:<SeniorListView/>},
+      {path:'view/city',element:<CityListView/>},
+      {path:'view/workplace',element:<WorkPlaceListView/>},
+      {path:'view/worktype',element:<WorkTypeListView/>},
+      {path:'view/holiday',element:<HolidayListView/>},
       { path: 'dashboard', element: <DashboardView /> },
       // { path: 'products', element: <ProductListView /> },
       {path:'doctor',element:<DoctorView/>},

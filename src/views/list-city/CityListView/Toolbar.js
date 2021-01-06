@@ -20,7 +20,7 @@ import {
 import useForm from './useForm';
 import { Search as SearchIcon } from 'react-feather';
 import {connect} from 'react-redux';
-import {fetchCollectionsStartAsync} from '../../../redux/chemist/chemist.actions';
+import {fetchCollectionsStartAsync} from '../../../redux/city/city.actions';
 import validateInfo from './validateInfo';
 
 const useStyles = makeStyles((theme) => ({
@@ -42,72 +42,15 @@ const Toolbar = ({ className,fetchCollectionsStart,...rest }) => {
     <>
     
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">Add Chemist</DialogTitle>
+      <DialogTitle id="form-dialog-title">Add City</DialogTitle>
       <form onSubmit={handleSubmit} noValidate>
       <DialogContent>
         <DialogContentText>
-        Add Chemist According Your Requirements
+        Add City According Your Requirements
         </DialogContentText>
-        <TextField
-            fullWidth
-            label="Name"
-            error={errors.name && true}
-            helperText={errors.name && errors.name}
-            margin="normal"
-            name="name"
-            type="text"
-            variant="outlined"
-            value={values.name}
-            onChange={handleChange}
-          />
-          <TextField
-            fullWidth
-            label="Shop Name"
-            error={errors.shop_name && true}
-            helperText={errors.shop_name && errors.shop_name}
-            margin="normal"
-            name="shop_name"
-            type="text"
-            variant="outlined"
-            value={values.shop_name}
-            onChange={handleChange}
-          />
-          <TextField
-            fullWidth
-            label="Email"
-            error={errors.email && true}
-            helperText={errors.email && errors.email}
-            margin="normal"
-            name="email"
-            type="email"
-            value={values.email}
-            variant="outlined"
-            onChange={handleChange}
-          />
-          <TextField
-            fullWidth
-            label="number"
-            margin="normal"
-            error={errors.number && true}
-            helperText={errors.number && errors.number}
-            name="number"
-            type="text"
-            value={values.number}
-            variant="outlined"
-            onChange={handleChange}
-          />
-          <TextField
-            fullWidth
-            label="area"
-            margin="normal"
-            error={errors.area && true}
-            helperText={errors.area && errors.area}
-            name="area"
-            type="text"
-            value={values.area}
-            variant="outlined"
-            onChange={handleChange}
-          />
+     
+      
+        
           <TextField
             fullWidth
             label="city"
@@ -149,7 +92,7 @@ const Toolbar = ({ className,fetchCollectionsStart,...rest }) => {
           variant="contained"
           onClick={()=>handleClickOpen()}
         >
-          Add Chemist
+          Add City
         </Button>
       </Box>
       

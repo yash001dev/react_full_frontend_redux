@@ -32,6 +32,8 @@ import {
 import { AddShoppingCart, Delete, Update } from '@material-ui/icons';
 // import getInitials from 'src/utils/getInitials';
 import Axios from 'axios';
+import useUpdateForm from './useupdateForm';
+import validateInfo from './validateInfo';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -42,65 +44,69 @@ const useStyles = makeStyles((theme) => ({
 
 const Results = ({ className, customers,chemistData,updateData,deleteData,getChemistData,...rest }) => {
   
+  const {handleChange,values,errors,handleSubmit,open,handleClickOpen,handleClose,handleEdit,deleteopen,deleteHandleClickOpen,deleteHandleClickClose,handleDelete,}=useUpdateForm(validateInfo,getChemistData,deleteData,updateData,chemistData)
+
   //FormDialogs Declaration
-  const [open,setOpen]=useState(false);
-  const [id,setId]=useState('');
-  const [name,setName]=useState('');
-  // const [shop_name,setShopName]=useState('');
-  const [email,setEmail]=useState('');
-  const [contactNumber,setContactNumber]=useState('');
-  const [area,setArea]=useState('');
-  const [city,setCity]=useState('');
-  const [deleteId,setDeleteId]=useState('');
+//   const [open,setOpen]=useState(false);
+//   const [id,setId]=useState('');
+//   const [name,setName]=useState('');
+//   const [shop_name,setShopName]=useState('');
+//   const [email,setEmail]=useState('');
+//   const [contactNumber,setContactNumber]=useState('');
+//   const [area,setArea]=useState('');
+//   const [city,setCity]=useState('');
+//   const [deleteId,setDeleteId]=useState('');
 
-  //DeleteFormDialogs Declaration
-  const [deleteopen,setDeleteOpen]=useState(false);
+//   //DeleteFormDialogs Declaration
+//   const [deleteopen,setDeleteOpen]=useState(false);
 
-  const deleteHandleClickOpen=(data)=>{
-    setDeleteOpen(true);
-    setDeleteId(data);
-  };
+//   const deleteHandleClickOpen=(data)=>{
+//     setDeleteOpen(true);
+//     setDeleteId(data);
+//   };
 
-  const deleteHandleClickClose=()=>{
-    setDeleteOpen(false);
-  };
+//   const deleteHandleClickClose=()=>{
+//     setDeleteOpen(false);
+//   };
 
-  const handleClickOpen=(data)=>{
-    setId(data.id);
-    setName(data.name);
-    
-    setEmail(data.email);
-    setContactNumber(data.number);
-    setArea(data.area);
-    setCity(data.city);
-    setOpen(true);
-  };
+//   const handleClickOpen=(data)=>{
+//     setId(data.id);
+//     setName(data.name);
+//     setShopName(data.shop_name);
+//     setEmail(data.email);
+//     setContactNumber(data.number);
+//     setArea(data.area);
+//     setCity(data.city);
+//     setOpen(true);
+//   };
 
-  const handleClose=()=>{
-    setOpen(false);
-  };
+//   const handleClose=()=>{
+//     setOpen(false);
+//   };
 
-const handleEdit=()=>{
-  console.log("Edit Button is Clicked");
+// const handleEdit=()=>{
+//   console.log("Edit Button is Clicked");
 
-         Axios.put('http://localhost:3001/api/doctor/update',{
-            id:id,
-            name:name,
-            email:email,
-            number:contactNumber,
-            area:area,
-          })
-          updateData({id:id,name:name,email:email,city:city,area:area,number:contactNumber});
-          setOpen(false);
-};
+//          Axios.put('http://localhost:3001/api/doctorReducer/update',{
+//             id:id,
+//             name:name,
+//             email:email,
+//             number:contactNumber,
+//             area:area,
+//             city:city,
+//             shop_name:shop_name
+//           })
+//           updateData({id:id,name:name,shop_name:shop_name,email:email,city:city,area:area,number:contactNumber});
+//           setOpen(false);
+// };
 
-const handleDelete=()=>{
-  console.log("Delete Button is Called...");
-  console.log("DELETED ID:",deleteId.id);
-  Axios.delete(`http://localhost:3001/api/doctor/delete/${deleteId.id}`);
-  deleteData(deleteId.id);
-  setDeleteOpen(false);
-}
+// const handleDelete=()=>{
+//   console.log("Delete Button is Called...");
+//   console.log("DELETED ID:",deleteId.id);
+//   Axios.delete(`http://localhost:3001/api/doctorReducer/delete/${deleteId.id}`);
+//   deleteData(deleteId.id);
+//   setDeleteOpen(false);
+// }
 
   //Normal Declaration
   const classes = useStyles();
@@ -116,71 +122,85 @@ const handleDelete=()=>{
   return (
     <>
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <form onSubmit={handleEdit} noValidate>
       <DialogTitle id="form-dialog-title">Edit Chemist</DialogTitle>
       <DialogContent>
         <DialogContentText>
-        Edit Doctor According Your Requirements
+        Edit Chemist According Your Requirements
         </DialogContentText>
         <TextField
             fullWidth
             label="Name"
+            error={errors.name && true}
+            helperText={errors.name && errors.name}
             margin="normal"
             name="name"
             type="text"
             variant="outlined"
-            value={name}
-            onChange={(e)=>setName(e.target.value)}
+            value={values.name}
+            onChange={handleChange}
           />
           
           <TextField
             fullWidth
             label="Email"
+            error={errors.email && true}
+            helperText={errors.email && errors.email}
             margin="normal"
             name="email"
             type="email"
-            value={email}
+            value={values.email}
             variant="outlined"
-            onChange={(e)=>setEmail(e.target.value)}
+            onChange={handleChange}
           />
           <TextField
             fullWidth
             label="number"
             margin="normal"
+            error={errors.number && true}
+            helperText={errors.number && errors.number}
             name="number"
             type="text"
-            value={contactNumber}
+            value={values.number}
             variant="outlined"
-            onChange={(e)=>setContactNumber(e.target.value)}
+            onChange={handleChange}
           />
           <TextField
             fullWidth
+            error
+            helperText={'Please Fill Data'}
             label="area"
+            error={errors.area && true}
+            helperText={errors.area && errors.area}
             margin="normal"
             name="area"
             type="text"
-            value={area}
+            value={values.area}
             variant="outlined"
-            onChange={(e)=>setArea(e.target.value)}
+            onChange={handleChange}
           />
           <TextField
             fullWidth
             label="city"
             margin="normal"
+            error={errors.city && true}
+            helperText={errors.city && errors.city}
             name="city"
             type="text"
-            value={city}
+            value={values.city}
             variant="outlined"
-            onChange={(e)=>setCity(e.target.value)}
+            onChange={handleChange}
           />
       </DialogContent>
       <DialogActions>
-      <Button onClick={handleEdit} color="primary">
+      <Button type="submit" color="primary">
             Edit
           </Button>
       <Button onClick={handleClose} color="primary" autoFocus>
             Close
         </Button>
       </DialogActions>
+      </form>
     </Dialog>
 
 
@@ -207,6 +227,16 @@ const handleDelete=()=>{
         </DialogActions>
       </Dialog>
 
+
+
+
+
+
+
+
+
+
+    
     {chemistData?
     <Card
       className={clsx(classes.root, className)}
@@ -220,6 +250,9 @@ const handleDelete=()=>{
                 <TableCell>
                   Name
                 </TableCell>
+                {/* <TableCell>
+                  Shop Name
+                </TableCell> */}
                 <TableCell>
                   Email
                 </TableCell>
@@ -270,6 +303,9 @@ const handleDelete=()=>{
                       </Typography>
                     </Box>
                   </TableCell>
+                  {/* <TableCell>
+                    {data.shop_name}
+                  </TableCell> */}
                   <TableCell>
                     {data.email}
                   </TableCell>

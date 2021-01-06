@@ -6,50 +6,51 @@ const INITIAL_STATE={
 
 const updateCollection=(existingList,data)=>{
     return existingList.map((item)=>{
-        return item.id==data.id?{...item,name:data.name,email:data.email,city:data.city,area:data.city,number:data.number,shop_name:data.shop_name}:item
+        return item.workplace_id==data.id?{...item,workplace_name:data.workplace}:item
     });
 };
 
 const deleteCollection=(existingList,data)=>{
-    return existingList.filter((item)=>item.id!==data);
+    console.log("DATA DELETE:",existingList);
+    return existingList.filter((item)=>item.workplace_id!==data);
 }
 
-const chemistReducer=(state=INITIAL_STATE,action)=>{
+const workPlaceReducer=(state=INITIAL_STATE,action)=>{
     switch(action.type){
-        case 'CHEMIST_FETCH_COLLECTIONS_START':
+        case 'WORKPLACE_FETCH_COLLECTIONS_START':
             return{
                 ...state,
                 isFetching:true
             }
         
-        case 'CHEMIST_FETCH_COLLECTIONS_SUCCESS':
+        case 'WORKPLACE_FETCH_COLLECTIONS_SUCCESS':
             return{
                 ...state,
                 isFetching:false,
                 collections:action.payload
             }
-        case 'CHEMIST_FETCH_COLLECTIONS_FAILURE':
+        case 'WORKPLACE_FETCH_COLLECTIONS_FAILURE':
             return{
                 ...state,
                 isFetching:false,
                 errorMessage:action.payload
             }
-        case 'CHEMIST_UPDATE_COLLECTIONS':
+        case 'WORKPLACE_UPDATE_COLLECTIONS':
             return{
                 ...state,
                 collections:action.payload
             }
-        case 'CHEMIST_COLLECTION_UPDATE':
+        case 'WORKPLACE_COLLECTION_UPDATE':
             return{
                 ...state,
                 collections:updateCollection(state.collections,action.payload)
             }
-        case 'CHEMIST_COLLECTION_DELETE':
+        case 'WORKPLACE_COLLECTION_DELETE':
             return{
                 ...state,
                 collections:deleteCollection(state.collections,action.payload)
             }
-        case 'CHEMIST_UPDATE_COLLECTIONS_START':
+        case 'WORKPLACE_UPDATE_COLLECTIONS_START':
             return{
                 ...state,
                 isFetching:false,
@@ -61,4 +62,4 @@ const chemistReducer=(state=INITIAL_STATE,action)=>{
     }
 };
 
-export default chemistReducer;
+export default workPlaceReducer;

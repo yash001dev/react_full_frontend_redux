@@ -1,26 +1,26 @@
 
 //Select Collection
 export const fetchCollectionsStart=()=>({
-    type:'FETCH_COLLECTIONS_START',
+    type:'SENIOR_FETCH_COLLECTIONS_START',
 });
 
 export const fetchCollectionsSuccess=collectionsMap=>({
-    type:'FETCH_COLLECTIONS_SUCCESS',
+    type:'SENIOR_FETCH_COLLECTIONS_SUCCESS',
     payload:collectionsMap
 });
 
 export const fetchCollectionFailure=errorMessage=>({
-    type:'FETCH_COLLECTIONS_FAILURE',
+    type:'SENIOR_FETCH_COLLECTIONS_FAILURE',
     payload:errorMessage
 });
 
 export const updateData=item=>({
-    type:'COLLECTION_UPDATE',
+    type:'SENIOR_COLLECTION_UPDATE',
     payload:item
 });
 
 export const deleteData=item=>({
-    type:'COLLECTION_DELETE',
+    type:'SENIOR_COLLECTION_DELETE',
     payload:item
 });
 

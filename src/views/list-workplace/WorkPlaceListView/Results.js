@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 // import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {connect} from 'react-redux';
-import {fetchCollectionsStartAsync,updateData,deleteData} from '../../../redux/chemist/chemist.actions';
+import {fetchCollectionsStartAsync,updateData,deleteData} from '../../../redux/workplace/workplace.actions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import {
@@ -87,7 +87,7 @@ const Results = ({ className, customers,chemistData,updateData,deleteData,getChe
 // const handleEdit=()=>{
 //   console.log("Edit Button is Clicked");
 
-//          Axios.put('http://localhost:3001/api/chemist/update',{
+//          Axios.put('http://localhost:3001/api/doctorReducer/update',{
 //             id:id,
 //             name:name,
 //             email:email,
@@ -103,7 +103,7 @@ const Results = ({ className, customers,chemistData,updateData,deleteData,getChe
 // const handleDelete=()=>{
 //   console.log("Delete Button is Called...");
 //   console.log("DELETED ID:",deleteId.id);
-//   Axios.delete(`http://localhost:3001/api/chemist/delete/${deleteId.id}`);
+//   Axios.delete(`http://localhost:3001/api/doctorReducer/delete/${deleteId.id}`);
 //   deleteData(deleteId.id);
 //   setDeleteOpen(false);
 // }
@@ -126,9 +126,9 @@ const Results = ({ className, customers,chemistData,updateData,deleteData,getChe
       <DialogTitle id="form-dialog-title">Edit Chemist</DialogTitle>
       <DialogContent>
         <DialogContentText>
-        Edit Chemist According Your Requirements
+        Edit WorkPlace According Your Requirements
         </DialogContentText>
-        <TextField
+        {/* <TextField
             fullWidth
             label="Name"
             error={errors.name && true}
@@ -140,18 +140,7 @@ const Results = ({ className, customers,chemistData,updateData,deleteData,getChe
             value={values.name}
             onChange={handleChange}
           />
-          <TextField
-            fullWidth
-            label="Shop Name"
-            error={errors.shop_name && true}
-            helperText={errors.shop_name && errors.shop_name}
-            margin="normal"
-            name="shop_name"
-            type="text"
-            variant="outlined"
-            value={values.shop_name}
-            onChange={handleChange}
-          />
+          
           <TextField
             fullWidth
             label="Email"
@@ -175,8 +164,8 @@ const Results = ({ className, customers,chemistData,updateData,deleteData,getChe
             value={values.number}
             variant="outlined"
             onChange={handleChange}
-          />
-          <TextField
+          /> */}
+          {/* <TextField
             fullWidth
             error
             helperText={'Please Fill Data'}
@@ -189,16 +178,16 @@ const Results = ({ className, customers,chemistData,updateData,deleteData,getChe
             value={values.area}
             variant="outlined"
             onChange={handleChange}
-          />
+          /> */}
           <TextField
             fullWidth
-            label="city"
+            label="workplace"
             margin="normal"
-            error={errors.city && true}
-            helperText={errors.city && errors.city}
-            name="city"
+            error={errors.workplace && true}
+            helperText={errors.workplace && errors.workplace}
+            name="workplace"
             type="text"
-            value={values.city}
+            value={values.workplace}
             variant="outlined"
             onChange={handleChange}
           />
@@ -258,25 +247,17 @@ const Results = ({ className, customers,chemistData,updateData,deleteData,getChe
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>
-                  Name
-                </TableCell>
-                <TableCell>
+                
+                {/* <TableCell>
                   Shop Name
+                </TableCell> */}
+                
+               
+                
+                <TableCell width="90%">
+                  WorkPlace
                 </TableCell>
-                <TableCell>
-                  Email
-                </TableCell>
-                <TableCell>
-                  Contact Number
-                </TableCell>
-                <TableCell>
-                  Area
-                </TableCell>
-                <TableCell>
-                  City
-                </TableCell>
-                <TableCell>
+                <TableCell width =  "10%">
                   Operation
                 </TableCell>
               </TableRow>
@@ -285,8 +266,9 @@ const Results = ({ className, customers,chemistData,updateData,deleteData,getChe
               {chemistData.slice(0, limit).map((data,index) => (
                 <TableRow
                   hover
+                  
                   key={index}
-                  selected={selectedCustomerIds.indexOf(data.id) !== -1}
+                  selected={selectedCustomerIds.indexOf(data.workplace_id) !== -1}
                 >
                   {/* <TableCell padding="checkbox">
                     <Checkbox
@@ -295,42 +277,17 @@ const Results = ({ className, customers,chemistData,updateData,deleteData,getChe
                       value="true"
                     />
                   </TableCell> */}
-                  <TableCell>
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                    >
-                      {/* <Avatar
-                        className={classes.avatar}
-                        src={customer.avatarUrl}
-                      >
-                        {getInitials(customer.name)}
-                      </Avatar> */}
-                      <Typography
-                        color="textPrimary"
-                        variant="body1"
-                      >
-                        {data.name}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
+                  
+                  {/* <TableCell>
                     {data.shop_name}
+                  </TableCell> */}
+                  
+                  
+                 
+                  <TableCell width="90%">
+                    {data.workplace_name}
                   </TableCell>
-                  <TableCell>
-                    {data.email}
-                  </TableCell>
-                  <TableCell>
-                    {data.number}
-                    {/* {`${customer.address.city}, ${customer.address.state}, ${customer.address.country}`} */}
-                  </TableCell>
-                  <TableCell>
-                    {data.area}
-                  </TableCell>
-                  <TableCell>
-                    {data.city}
-                  </TableCell>
-                  <TableCell>
+                  <TableCell width="10%">
                     <IconButton onClick={()=>handleClickOpen(data)}>
                      <Update/>
                     </IconButton>
@@ -360,7 +317,7 @@ const mapDispatchToProps=dispatch=>({
 })
 
 const mapStateToProps=(state)=>({
-  chemistData:state.chemist.collections
+  chemistData:state.workplace.collections
 });
 export default connect(mapStateToProps,mapDispatchToProps)(Results);
 

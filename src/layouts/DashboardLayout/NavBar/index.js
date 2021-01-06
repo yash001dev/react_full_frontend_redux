@@ -57,11 +57,31 @@ const items = [
     icon:UserPlusIcon,
     title:'Senior'
   },
-  // {
-  //   href: '/app/products',
-  //   icon: ShoppingBagIcon,
-  //   title: 'Products'
-  // },
+  {
+    href: '/app/view/city',
+    icon: LockIcon,
+    title: 'Cities'
+  },
+  {
+    href: '/app/view/workplace',
+    icon: ShoppingBagIcon,
+    title: 'WorkPlace'
+  },
+  {
+    href: '/app/view/worktype',
+    icon: ShoppingBagIcon,
+    title: 'WorkType'
+  },
+  {
+    href: '/app/view/holiday',
+    icon: ShoppingBagIcon,
+    title: 'Holiday'
+  },
+  {
+    href: '/app/view/task',
+    icon: ShoppingBagIcon,
+    title: 'Task'
+  },
   {
     href: '/app/account',
     icon: UserIcon,

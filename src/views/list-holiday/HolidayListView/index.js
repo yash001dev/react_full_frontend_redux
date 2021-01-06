@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const DoctorListView = () => {
+const HolidayListView = () => {
   const classes = useStyles();
 
 
@@ -29,7 +29,7 @@ const DoctorListView = () => {
 
     <Page
       className={classes.root}
-      title="Doctor"
+      title="Holidays"
     >
       <Container maxWidth={false}>
         <Toolbar />
@@ -42,4 +42,4 @@ const DoctorListView = () => {
   );
 };
 
-export default DoctorListView;
+export default HolidayListView;

@@ -2,32 +2,32 @@ import axios from 'axios';
 
 //Select Collection
 export const fetchCollectionsStart=()=>({
-    type:'CHEMIST_FETCH_COLLECTIONS_START',
+    type:'WORKPLACE_FETCH_COLLECTIONS_START',
 });
 
 export const fetchCollectionsSuccess=collectionsMap=>({
-    type:'CHEMIST_FETCH_COLLECTIONS_SUCCESS',
+    type:'WORKPLACE_FETCH_COLLECTIONS_SUCCESS',
     payload:collectionsMap
 });
 
 export const fetchCollectionFailure=errorMessage=>({
-    type:'CHEMIST_FETCH_COLLECTIONS_FAILURE',
+    type:'WORKPLACE_FETCH_COLLECTIONS_FAILURE',
     payload:errorMessage
 });
 
 export const updateData=item=>({
-    type:'CHEMIST_COLLECTION_UPDATE',
+    type:'WORKPLACE_COLLECTION_UPDATE',
     payload:item
 });
 
 export const deleteData=item=>({
-    type:'CHEMIST_COLLECTION_DELETE',
+    type:'WORKPLACE_COLLECTION_DELETE',
     payload:item
 });
 
 //Update Collection
 export const updateCollectionsStart=()=>({
-    type:'CHEMIST_UPDATE_COLLECTIONS_START',
+    type:'WORKPLACE_UPDATE_COLLECTIONS_START',
 });
 
 // export const updateCollectionsSuccess=collectionsMap=>({
@@ -45,7 +45,7 @@ export const updateCollectionsStart=()=>({
 export const fetchCollectionsStartAsync=()=>{
     return dispatch=>{
         dispatch(fetchCollectionsStart());
-        axios.get('http://localhost:3001/api/chemist/get')
+        axios.get('http://localhost:3001/api/workplace/get')
         .then((response)=>{
             console.log("RESPONSEDATA:",response);
             const collectionMap=response.data;
@@ -77,7 +77,7 @@ export const updateCollectionsStartAsync=(item)=>{
     //     }).catch(error=>dispatch(fetchCollectionFailure('Something wents wrong... please try again')));
     return dispatch=>{
         dispatch(updateCollectionsStart());
-        axios.put('http://localhost:3001/api/chemist/update',item)
+        axios.put('http://localhost:3001/api/workplace/update',item)
         .then((res)=>{
             dispatch(fetchCollectionsStartAsync(item))
         })

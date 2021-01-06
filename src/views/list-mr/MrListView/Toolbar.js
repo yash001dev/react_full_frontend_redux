@@ -148,7 +148,7 @@ const Toolbar = ({ className, fetchCollectionsStart, ...rest }) => {
     <>
 
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Add Chemist</DialogTitle>
+        <DialogTitle id="form-dialog-title">Add Mr</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Add Mr According Your Requirements

@@ -16,35 +16,35 @@ const deleteCollection=(existingList,data)=>{
 
 const seniorReducer=(state=INITIAL_STATE,action)=>{
     switch(action.type){
-        case 'FETCH_COLLECTIONS_START':
+        case 'SENIOR_FETCH_COLLECTIONS_START':
             return{
                 ...state,
                 isFetching:true
             }
         
-        case 'FETCH_COLLECTIONS_SUCCESS':
+        case 'SENIOR_FETCH_COLLECTIONS_SUCCESS':
             return{
                 ...state,
                 isFetching:false,
                 collections:action.payload
             }
-        case 'FETCH_COLLECTIONS_FAILURE':
+        case 'SENIOR_FETCH_COLLECTIONS_FAILURE':
             return{
                 ...state,
                 isFetching:false,
                 errorMessage:action.payload
             }
-        case 'UPDATE_COLLECTIONS':
+        case 'SENIOR_UPDATE_COLLECTIONS':
             return{
                 ...state,
                 collections:action.payload
             }
-        case 'COLLECTION_UPDATE':
+        case 'SENIOR_COLLECTION_UPDATE':
             return{
                 ...state,
                 collections:updateCollection(state.collections,action.payload)
             }
-        case 'COLLECTION_DELETE':
+        case 'SENIOR_COLLECTION_DELETE':
             return{
                 ...state,
                 collections:deleteCollection(state.collections,action.payload)

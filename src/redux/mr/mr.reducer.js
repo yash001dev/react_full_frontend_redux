@@ -16,35 +16,35 @@ const deleteCollection=(existingList,data)=>{
 
 const mrReducer=(state=INITIAL_STATE,action)=>{
     switch(action.type){
-        case 'FETCH_COLLECTIONS_START':
+        case 'MR_FETCH_COLLECTIONS_START':
             return{
                 ...state,
                 isFetching:true
             }
         
-        case 'FETCH_COLLECTIONS_SUCCESS':
+        case 'MR_FETCH_COLLECTIONS_SUCCESS':
             return{
                 ...state,
                 isFetching:false,
                 collections:action.payload
             }
-        case 'FETCH_COLLECTIONS_FAILURE':
+        case 'MR_FETCH_COLLECTIONS_FAILURE':
             return{
                 ...state,
                 isFetching:false,
                 errorMessage:action.payload
             }
-        case 'UPDATE_COLLECTIONS':
+        case 'MR_UPDATE_COLLECTIONS':
             return{
                 ...state,
                 collections:action.payload
             }
-        case 'COLLECTION_UPDATE':
+        case 'MR_COLLECTION_UPDATE':
             return{
                 ...state,
                 collections:updateCollection(state.collections,action.payload)
             }
-        case 'COLLECTION_DELETE':
+        case 'MR_COLLECTION_DELETE':
             return{
                 ...state,
                 collections:deleteCollection(state.collections,action.payload)

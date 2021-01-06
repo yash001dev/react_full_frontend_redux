@@ -29,7 +29,7 @@ const MrListView = () => {
 
     <Page
       className={classes.root}
-      title="Chemist"
+      title="Mr"
     >
       <Container maxWidth={false}>
         <Toolbar />

@@ -21,6 +21,7 @@ import CityListView from './views/list-city/CityListView/index';
 import WorkPlaceListView from './views/list-workplace/WorkPlaceListView/index';
 import WorkTypeListView from './views/list-worktype/WorkTypeListView/index';
 import HolidayListView from './views/list-holiday/HolidayListView/index';
+import TaskListView from './views/list-task/TaskListView/index';
 const routes = [
   {
     path: 'app',
@@ -35,6 +36,7 @@ const routes = [
       {path:'view/workplace',element:<WorkPlaceListView/>},
       {path:'view/worktype',element:<WorkTypeListView/>},
       {path:'view/holiday',element:<HolidayListView/>},
+      {path:'view/task',element:<TaskListView/>},
       { path: 'dashboard', element: <DashboardView /> },
       // { path: 'products', element: <ProductListView /> },
       {path:'doctor',element:<DoctorView/>},

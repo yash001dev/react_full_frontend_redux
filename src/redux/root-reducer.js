@@ -12,6 +12,7 @@ import cityReducer from './city/city.reducer';
 import workPlaceReducer from './workplace/workplace.reducer';
 import holidayReducer from './holiday/holiday.reducer';
 import workTypeReducer from './worktype/worktype.reducer';
+import taskTypeReducer from './task/task.reducer';
  
 export default combineReducers({
     doctor:doctorReducer,
@@ -22,7 +23,7 @@ export default combineReducers({
     workplace:workPlaceReducer,
     holiday:holidayReducer,
     worktype:workTypeReducer,
-
+    task:taskTypeReducer,
 });
 
 

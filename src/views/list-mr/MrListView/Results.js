@@ -6,6 +6,8 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import {connect} from 'react-redux';
 import {fetchCollectionsStartAsync,updateData,deleteData} from '../../../redux/mr/mr.actions';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import AssignmentLateOutlinedIcon from '@material-ui/icons/AssignmentLateOutlined';
+import Input from '@material-ui/core/Input';
 
 import {
   // Avatar,
@@ -44,7 +46,16 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2)
   }
 }));
-
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+  };
 const Results = ({ className, customers,mrData,updateData,deleteData,getChemistData,...rest }) => {
   
   
@@ -65,22 +76,35 @@ const Results = ({ className, customers,mrData,updateData,deleteData,getChemistD
   //DeleteFormDialogs Declaration
   const [deleteopen,setDeleteOpen]=useState(false);
 
+  const [taskopen,setTaskOpen]=useState(false);
+  const [taskId,setTaskId]=useState('');
 
   const [selectDoctor, setSelectedDoctor] = useState([]);
   const [selectChemist, setSelectedChemist] = useState([]);
   const [fetchChemist,setFetchChemist]=useState('');
   const [fetchDoctor,setFetchDoctor]=useState('');
 
-  const [GetSelectedDoctor,setGetSelectedDoctor]=useState();
+  // const [GetSelectedDoctor,setGetSelectedDoctor]=useState();
   const [GetSelectedChemist,setGetSelectedChemist]=useState();
+
+  
 
   const deleteHandleClickOpen=(data)=>{
     setDeleteOpen(true);
     setDeleteId(data);
   };
 
+  const taskHandleClickOpen=(data)=>{
+   setTaskOpen(true);
+    setTaskId(data);
+  };
+
   const deleteHandleClickClose=()=>{
     setDeleteOpen(false);
+  };
+
+  const taskHandleClickClose=()=>{
+    setTaskOpen(false);
   };
 
   const handleClickOpen=(data)=>{
@@ -113,12 +137,14 @@ const Results = ({ className, customers,mrData,updateData,deleteData,getChemistD
     return null;
   }
 
+  
+
 
   const MrToDoctor=async()=>{
     console.log("ID:",id);
     const response=await axios(`http://localhost:3001/api/mrToDoctor/get/${id}`);
     if(response){
-      setGetSelectedDoctor([]);
+      setSelectedDoctor([]);
       console.log("MRID:",response);
       const data=await response.data
       console.log("DATA:",data);
@@ -137,7 +163,7 @@ const Results = ({ className, customers,mrData,updateData,deleteData,getChemistD
     console.log("ID:",id);
     const response=await axios(`http://localhost:3001/api/mrToChemist/get/${id}`);
     if(response){
-      setGetSelectedChemist([]);
+      setSelectedChemist([]);
       console.log("MRID:",response);
       const data=await response.data
       console.log("DATA:",data);
@@ -208,6 +234,7 @@ const handleDelete=()=>{
   
   return (
     <>
+    {console.log("SELECTED INDEX:",selectDoctor)}
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">Edit Chemist</DialogTitle>
       <DialogContent>
@@ -270,44 +297,51 @@ const handleDelete=()=>{
           <Select
             id="select-label"
             fullWidth
+            multiple
             margin="normal"
             name="select_doctor"
             value={selectDoctor}
             style={{ marginTop: theme.spacing(1) }}
+            input={<Input/>}
+            renderValue={(selected)=>selected.join(', ')}
+            MenuProps={MenuProps}
             variant="outlined"
-            onChange={(e) => setGetSelectedDoctor(e.target.value)}
+            onChange={(e) => setSelectedDoctor(e.target.value)}
           >
             {fetchDoctor ? fetchDoctor.map((item) => {
               return <MenuItem key={item.id} id={item.id} value={item.id}>
-              <Checkbox checked={selectDoctor.indexOf(item.id) > -1} />
-              <ListItemText primary={item.name} />
-              </MenuItem>
-          }) : <MenuItem value="">
-              <em>None</em>
-            </MenuItem>}
+                <Checkbox checked={selectDoctor.indexOf(item.id) > -1} />
+                <ListItemText primary={item.name} />
+                </MenuItem>
+            }) : <MenuItem value="">
+                <em>None</em>
+              </MenuItem>}
           </Select>
 
-          <InputLabel style={{ marginTop: theme.spacing(2) }} id="select-label">Select Chemist</InputLabel>
+          <InputLabel style={{ marginTop: theme.spacing(2) }} id="select-label2">Select Doctor</InputLabel>
           <Select
-            id="select-label"
+            id="select-label2"
             fullWidth
+            multiple
             margin="normal"
-            name="select_chemist"
+            name="select_doctor"
             value={selectChemist}
             style={{ marginTop: theme.spacing(1) }}
+            input={<Input/>}
+            renderValue={(selected)=>selected.join(', ')}
+            MenuProps={MenuProps}
             variant="outlined"
-            onChange={(e) => setGetSelectedChemist(e.target.value)}
+            onChange={(e) => setSelectedChemist(e.target.value)}
           >
-            {fetchChemist? fetchChemist.map((item) => {
+            {fetchChemist ? fetchChemist.map((item) => {
               return <MenuItem key={item.id} id={item.id} value={item.id}>
-              <Checkbox checked={selectChemist.indexOf(item.id) > -1} />
-              <ListItemText primary={item.name} />
-              </MenuItem>
-          }) : <MenuItem value="">
-              <em>None</em>
-            </MenuItem>}
+                <Checkbox checked={selectChemist.indexOf(item.id) > -1} />
+                <ListItemText primary={item.name} />
+                </MenuItem>
+            }) : <MenuItem value="">
+                <em>None</em>
+              </MenuItem>}
           </Select>
-
 
           
 
@@ -321,6 +355,43 @@ const handleDelete=()=>{
         </Button>
       </DialogActions>
     </Dialog>
+
+
+    <Dialog open={taskopen} onClose={handleClose} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Add Doctor Task</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+             Select doctor and add task.
+          </DialogContentText>
+          <InputLabel style={{ marginTop: theme.spacing(2) }} id="select-label">Select Doctor</InputLabel>
+          <Select
+            id="select-label"
+            fullWidth
+            margin="normal"
+            name="select_doctor"
+            value={selectDoctor}            
+            style={{ marginTop: theme.spacing(1) }}
+            variant="outlined"
+            onChange={(e) => setSelectedDoctor(e.target.value)}
+          >
+            {fetchDoctor ? fetchDoctor.map((item) => {
+              return <MenuItem value={selectDoctor.indexOf(item.id) > -1}>{item.name}</MenuItem>
+          }) : <MenuItem value="Select Doctor">
+              <em>None</em>
+            </MenuItem>}
+          </Select>
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Add Tasks
+          </Button>
+          <Button onClick={taskHandleClickClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
 
 
     
@@ -440,6 +511,9 @@ const handleDelete=()=>{
                     </IconButton>
                     <IconButton onClick={()=>deleteHandleClickOpen(data)}>
                       <Delete/>
+                    </IconButton>
+                    <IconButton onClick={()=>taskHandleClickOpen(data)}>
+                      <AssignmentLateOutlinedIcon/>
                     </IconButton>
                   </TableCell>
                 </TableRow>
